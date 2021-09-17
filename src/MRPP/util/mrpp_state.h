@@ -7,12 +7,20 @@
 #define COLLECTION_DATA_META_SIZE 7
 #define DR_BODY_PAYLOAD_SIZE 48
 #define DR_SUBID_OVERHEAD 2
+#define MAX_BODIES 30
 
 typedef enum {
     T_INT8=1,
     T_INT16=2,
     T_FLOAT=4
 } MEASURE_TYPE;
+
+typedef enum {
+    WAITING,
+    READY,
+    SENT,
+    DONE,
+} DR_STATUS;
 
 typedef struct COLLECTION
 {
@@ -30,6 +38,7 @@ typedef struct __COLLECTION_STATE
     uint16_t samplingInterval;
     uint8_t beginsInBody;
     uint8_t endsInBody;
+    DR_STATUS status;
 }__COLLECTION_STATE;
 
 
@@ -39,6 +48,8 @@ typedef struct MRPP_STATE
     uint8_t lastSubId;
     uint8_t nCollections;
     __COLLECTION_STATE collections[12];
+    uint8_t nBodies;
+    DR_STATUS bodies[MAX_BODIES];
 
 } MRPP_STATE;
 

@@ -32,9 +32,20 @@ void test_init(){
     TEST_ASSERT_EQUAL_INT8(0, state.collections[1].beginsInBody);
     TEST_ASSERT_EQUAL_INT8(1, state.collections[1].endsInBody);
 
+    //Collection status
+    TEST_ASSERT_EQUAL(WAITING, state.collections[0].status);
+    TEST_ASSERT_EQUAL(WAITING, state.collections[1].status);
+
+    //Bodies
+    TEST_ASSERT_EQUAL_INT8(2, state.nBodies);
+    TEST_ASSERT_EACH_EQUAL_INT(WAITING, state.bodies, 2);
 
 
 }
+
+
+
+
 
 int main(void){
     UNITY_BEGIN();

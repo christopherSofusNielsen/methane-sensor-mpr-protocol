@@ -20,7 +20,8 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
         state->collections[i].beginsInBody=startingIndex/DR_BODY_PAYLOAD_SIZE;
         state->collections[i].endsInBody=(startingIndex+len)/DR_BODY_PAYLOAD_SIZE;
 
-
+        //set status
+        state->collections[i].status=WAITING;
 
 
         startingIndex+=len;      
@@ -30,4 +31,14 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
     uint8_t lastSubId=startingIndex/DR_BODY_PAYLOAD_SIZE+1+DR_SUBID_OVERHEAD;
     state->lastSubId=lastSubId;
     
+    //calculate bodies
+    uint8_t nBodies=startingIndex/DR_BODY_PAYLOAD_SIZE+1;
+    state->nBodies=nBodies;
+
+    for (uint8_t i = 0; i < nBodies; i++)
+    {
+        state->bodies[i]=WAITING;
+    }
+    
+
 }
