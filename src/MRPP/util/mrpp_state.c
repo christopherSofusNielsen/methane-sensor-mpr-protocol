@@ -39,6 +39,23 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
     {
         state->bodies[i]=WAITING;
     }
+}
+
+
+uint8_t mrpp_state_get_header(MRPP_STATE *state, uint8_t package[]){
+    package[0]=0;
+    package[1]=state->lastSubId;
+
+    for (uint8_t i = 0; i < state->nCollections; i++)
+    {
+        package[i*4+2]=state->collections[i].startIndex >> 8;
+        package[i*4+3]=state->collections[i].startIndex;
+        package[i*4+4]=state->collections[i].length>>8;
+        package[i*4+5]=state->collections[i].length;
+    }
     
 
+
+
+    return 2+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
 }
