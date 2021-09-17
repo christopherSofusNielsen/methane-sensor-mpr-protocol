@@ -5,6 +5,8 @@
 #include <stdint.h>
 
 #define COLLECTION_DATA_META_SIZE 7
+#define DR_BODY_PAYLOAD_SIZE 48
+#define DR_SUBID_OVERHEAD 2
 
 typedef enum {
     T_INT8=1,
@@ -32,6 +34,7 @@ typedef struct __COLLECTION_STATE
 typedef struct MRPP_STATE
 {
     uint8_t groupId;
+    uint8_t lastSubId;
     uint8_t nCollections;
     __COLLECTION_STATE collections[12];
 

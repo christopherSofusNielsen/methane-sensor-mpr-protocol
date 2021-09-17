@@ -14,6 +14,8 @@ void test_init(){
     mrpp_state_init(&state, 10, cols, 2);
 
     TEST_ASSERT_EQUAL_INT8(10, state.groupId);
+    uint8_t lastSubId=(10*2+7+20*2+7)/48+1+2;
+    TEST_ASSERT_EQUAL_INT16(lastSubId, state.lastSubId);
     TEST_ASSERT_EQUAL_INT8(1, state.collections[0].id);
     TEST_ASSERT_EQUAL_INT8(2, state.collections[1].id);
     TEST_ASSERT_EQUAL_INT16(0, state.collections[0].startIndex);
