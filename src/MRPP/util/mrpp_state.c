@@ -8,11 +8,14 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
     for (uint8_t i = 0; i < nCollections; i++)
     {
         state->collections[i].id=i+1;
-        state->collections[i].startIndex=startingIndex;
         state->collections[i].samplingInterval=collections[i].samplingInterval;
-        uint16_t len=collections[i].samplings*collections[i].type+7;
+
+        //Calculate length and set starting index
+        state->collections[i].startIndex=startingIndex;
+        uint16_t len=collections[i].samplings*collections[i].type+COLLECTION_DATA_META_SIZE;
         state->collections[i].length=len;
         startingIndex+=len;
+        
     }
     
 }

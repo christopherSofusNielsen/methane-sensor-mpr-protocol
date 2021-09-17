@@ -4,6 +4,8 @@
 
 #include <stdint.h>
 
+#define COLLECTION_DATA_META_SIZE 7
+
 typedef enum {
     T_INT8=1,
     T_INT16=2,
