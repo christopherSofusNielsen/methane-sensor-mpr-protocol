@@ -14,7 +14,16 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
         state->collections[i].startIndex=startingIndex;
         uint16_t len=collections[i].samplings*collections[i].type+COLLECTION_DATA_META_SIZE;
         state->collections[i].length=len;
-        startingIndex+=len;        
+        
+
+        //calculate starting and ending body
+        state->collections[i].beginsInBody=startingIndex/DR_BODY_PAYLOAD_SIZE;
+        state->collections[i].endsInBody=(startingIndex+len)/DR_BODY_PAYLOAD_SIZE;
+
+
+
+
+        startingIndex+=len;      
     }
 
     //Calculate lastSubId

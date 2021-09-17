@@ -28,6 +28,8 @@ typedef struct __COLLECTION_STATE
     uint16_t length;
     MEASURE_TYPE type;
     uint16_t samplingInterval;
+    uint8_t beginsInBody;
+    uint8_t endsInBody;
 }__COLLECTION_STATE;
 
 
