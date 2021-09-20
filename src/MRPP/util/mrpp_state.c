@@ -157,5 +157,31 @@ bool mrpp_state_is_body_ready(MRPP_STATE *state){
         }
     }
     return isReady;
+}
+
+void mrpp_state_get_body_address(MRPP_STATE *state, uint16_t *begin, uint16_t*end){
     
+    if(!mrpp_state_is_body_ready(state)){
+        *begin=0;
+        *end=0;
+        return;
+    }
+
+    uint8_t readyIndex;
+    for (uint8_t i = 0; i < state->nBodies; i++)
+    {
+        if(state->bodies[i]==READY){
+            readyIndex=i;
+            break;
+        }
+    }
+
+    *begin=readyIndex*DR_BODY_PAYLOAD_SIZE;
+    if(readyIndex<state->nBodies-1){
+        *end=(readyIndex+1)*DR_BODY_PAYLOAD_SIZE-1;
+    }else{
+        *end=state->collections[state->nCollections-1].startIndex+state->collections[state->nCollections-1].length-1; 
+    }  
+
+
 }
