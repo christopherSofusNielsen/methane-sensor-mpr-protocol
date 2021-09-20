@@ -54,7 +54,7 @@ void test_get_header(){
         .lastSubId=3,
         .collections={
             {.id=1, .startIndex=0, .length=10+7},
-            {.id=2, .startIndex=10+7, .length=12+7 }
+            {.id=2, .startIndex=10+7, .length=12+7}
         }
     };
     uint8_t package[51];
@@ -65,6 +65,32 @@ void test_get_header(){
 }
 
 
+void test_get_tail(){
+        MRPP_STATE state={
+            .nCollections=2,
+            .lastSubId=3,
+            .collections={
+                {.id=1, .startIndex=0, .length=10+7, },
+                {.id=2, .startIndex=10+7, .length=12+7 }
+            }
+            };
+
+         uint8_t test_package[]={
+            0x03, //subId=3 
+            0x03, //lastSubId=3
+            0x00, 0x00, 0x00, 0x11, //startIndex=0, length=17
+            0x00, 0x11,0x00, 0x13 //startIndex=17, length=19
+            };
+
+        uint8_t package[51];
+        uint8_t length=mrpp_state_get_tail(&state, package);
+
+        TEST_ASSERT_EQUAL_INT8(2+2*4, length);
+        TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 10);
+
+}
+
+
 
 
 
@@ -72,5 +98,6 @@ int main(void){
     UNITY_BEGIN();
     RUN_TEST(test_init);
     RUN_TEST(test_get_header);
+    RUN_TEST(test_get_tail);
     return UNITY_END();
 }

@@ -54,8 +54,19 @@ uint8_t mrpp_state_get_header(MRPP_STATE *state, uint8_t package[]){
         package[i*4+5]=state->collections[i].length;
     }
     
+    return 2+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
+}
 
+uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]){
+    package[0]=state->lastSubId;
+    package[1]=state->lastSubId;
 
-
+    for (uint8_t i = 0; i < state->nCollections; i++)
+    {
+        package[i*4+2]=state->collections[i].startIndex >> 8;
+        package[i*4+3]=state->collections[i].startIndex;
+        package[i*4+4]=state->collections[i].length>>8;
+        package[i*4+5]=state->collections[i].length;
+    }
     return 2+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
 }

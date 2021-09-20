@@ -61,6 +61,7 @@ typedef struct MRPP_STATE
 void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[], uint8_t nCollections);
 
 uint8_t mrpp_state_get_header(MRPP_STATE *state, uint8_t package[]);
+uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]);
 
 
 #endif
