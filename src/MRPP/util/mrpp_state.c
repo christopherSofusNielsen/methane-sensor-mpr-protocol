@@ -1,5 +1,6 @@
 #include "mrpp_state.h"
 
+void mrpp_state_update_bodies(MRPP_STATE *state, uint8_t collectionId);
 
 void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[], uint8_t nCollections){
     state->groupId=groupId;
@@ -69,4 +70,79 @@ uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]){
         package[i*4+5]=state->collections[i].length;
     }
     return 2+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
+}
+
+void mrpp_state_set_collection(MRPP_STATE *state, uint8_t collectionId, uint8_t timestamp[4], uint8_t metadata[7]){
+    state->collections[collectionId-1].status=DONE;
+
+    //Copy ts
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        metadata[i]=timestamp[i];
+    }
+
+    //add sampling interval
+    metadata[4]=state->collections[collectionId-1].samplingInterval>>8;
+    metadata[5]=state->collections[collectionId-1].samplingInterval;
+
+    //add type
+    metadata[6]=state->collections[collectionId-1].type;
+
+    //Update bodies
+    mrpp_state_update_bodies(state, collectionId);
+}
+
+
+void mrpp_state_update_bodies(MRPP_STATE *state, uint8_t collectionId){
+    
+    //update begin
+    bool beginIsDone=true;
+    uint8_t beginsInBody=state->collections[collectionId-1].beginsInBody;
+    for (uint8_t i = 0; i < collectionId-1; i++)
+    {
+        if(i==collectionId-1) continue;
+
+        if( state->collections[i].endsInBody==beginsInBody){
+            if(state->collections[i].status!=DONE){
+                beginIsDone=false;
+                break;
+            }
+        }
+    }
+
+    if(beginIsDone){
+        state->bodies[beginsInBody]=READY;
+    }
+    
+
+    //update end
+    bool endIsDone=true;
+    uint8_t endsInBody=state->collections[collectionId-1].endsInBody;
+    for (uint8_t i = collectionId; i < state->nCollections; i++)
+    {
+         if(i==collectionId-1) continue;
+
+        if(state->collections[i].beginsInBody==endsInBody){
+            if(state->collections[i].status!=DONE){
+                endIsDone=false;
+                break;
+            }
+        }
+    }
+
+    if(endIsDone){
+        state->bodies[endsInBody]=READY;
+    }else{
+        //to handle cases where there are multiple collection in same body that starts and ends there
+        state->bodies[endsInBody]=WAITING;
+    }
+    
+    //update between
+    if(endsInBody-beginsInBody<2) return;
+
+    for (uint8_t i = beginsInBody+1; i < endsInBody; i++)
+    {
+        state->bodies[i]=READY;
+    }
+    
 }

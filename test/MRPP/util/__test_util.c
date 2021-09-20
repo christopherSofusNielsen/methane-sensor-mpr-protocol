@@ -90,6 +90,243 @@ void test_get_tail(){
 
 }
 
+void test_set_collection_1(){
+     MRPP_STATE state={
+            .nCollections=2,
+            .lastSubId=3,
+            .collections={
+                {
+                    .id=1, 
+                    .startIndex=0, 
+                    .length=10+7,
+                    .type=T_INT16,
+                    .samplingInterval=300,
+                    .beginsInBody=0,
+                    .endsInBody=0,
+                    .status=WAITING
+                },
+                {
+                    .id=2, 
+                    .startIndex=10+7, 
+                    .length=12+7,
+                    .type=T_INT16,
+                    .samplingInterval=40,
+                    .beginsInBody=0,
+                    .endsInBody=0,
+                    .status=WAITING 
+                }
+            },
+            .nBodies=1,
+            .bodies={WAITING}
+        };
+
+        uint8_t timestamp[]={0x00, 0x01, 0x02, 0x03};
+        uint8_t collectionId=1;
+        uint8_t metadata[7];
+
+        mrpp_state_set_collection(&state, collectionId, timestamp, metadata);
+        
+        //test ts
+        TEST_ASSERT_EQUAL_INT8(DONE, state.collections[0].status);
+        TEST_ASSERT_EQUAL_HEX8_ARRAY(timestamp, metadata, 4);
+        
+        //test sampling interval
+        uint16_t samplingInterval=(uint16_t)metadata[4]<<8 | (uint16_t)metadata[5];
+        TEST_ASSERT_EQUAL_INT16(state.collections[0].samplingInterval, samplingInterval);
+
+        //test type
+        TEST_ASSERT_EQUAL_INT8(state.collections[0].type, metadata[6]);
+
+        //test body is updated
+        TEST_ASSERT_EQUAL_INT8(WAITING, state.bodies[0]);
+
+}
+
+void test_set_collection_2(){
+     MRPP_STATE state={
+            .nCollections=2,
+            .lastSubId=3,
+            .collections={
+                {
+                    .id=1, 
+                    .startIndex=0, 
+                    .length=50+7,
+                    .type=T_INT16,
+                    .samplingInterval=300,
+                    .beginsInBody=0,
+                    .endsInBody=1,
+                    .status=WAITING
+                },
+                {
+                    .id=2, 
+                    .startIndex=50+7, 
+                    .length=40+7,
+                    .type=T_INT16,
+                    .samplingInterval=40,
+                    .beginsInBody=1,
+                    .endsInBody=3,
+                    .status=WAITING 
+                }
+            },
+            .nBodies=4,
+            .bodies={WAITING, WAITING, WAITING, WAITING}
+        };
+
+        uint8_t timestamp[]={0x00, 0x01, 0x02, 0x03};
+        uint8_t collectionId=2;
+        uint8_t metadata[7];
+
+        mrpp_state_set_collection(&state, collectionId, timestamp, metadata);
+        
+        //test ts
+        TEST_ASSERT_EQUAL_INT8(DONE, state.collections[1].status);
+        TEST_ASSERT_EQUAL_HEX8_ARRAY(timestamp, metadata, 4);
+        
+        //test sampling interval
+        uint16_t samplingInterval=(uint16_t)metadata[4]<<8 | (uint16_t)metadata[5];
+        TEST_ASSERT_EQUAL_INT16(state.collections[1].samplingInterval, samplingInterval);
+
+        //test type
+        TEST_ASSERT_EQUAL_INT8(state.collections[1].type, metadata[6]);
+
+        //test body is updated
+        TEST_ASSERT_EQUAL_INT8(WAITING, state.bodies[0]);
+        TEST_ASSERT_EQUAL_INT8(WAITING, state.bodies[1]);
+        TEST_ASSERT_EQUAL_INT8(READY, state.bodies[2]);
+        TEST_ASSERT_EQUAL_INT8(READY, state.bodies[3]);
+
+}
+
+void test_set_collection_3(){
+     MRPP_STATE state={
+            .nCollections=3,
+            .lastSubId=3,
+            .collections={
+                {
+                    .id=1, 
+                    .startIndex=0, 
+                    .length=60+7,
+                    .type=T_INT16,
+                    .samplingInterval=300,
+                    .beginsInBody=0,
+                    .endsInBody=1,
+                    .status=DONE
+                },
+                {
+                    .id=2, 
+                    .startIndex=60+7, 
+                    .length=10+7,
+                    .type=T_INT16,
+                    .samplingInterval=40,
+                    .beginsInBody=1,
+                    .endsInBody=1,
+                    .status=WAITING 
+                },
+                    {
+                    .id=3, 
+                    .startIndex=84, 
+                    .length=70+7,
+                    .type=T_INT16,
+                    .samplingInterval=600,
+                    .beginsInBody=1,
+                    .endsInBody=3,
+                    .status=WAITING 
+                }
+            },
+            .nBodies=4,
+            .bodies={READY, WAITING, WAITING, WAITING}
+        };
+
+        uint8_t timestamp[]={0x00, 0x01, 0x02, 0x03};
+        uint8_t collectionId=3;
+        uint8_t metadata[7];
+
+        mrpp_state_set_collection(&state, collectionId, timestamp, metadata);
+        
+        //test ts
+        TEST_ASSERT_EQUAL_INT8(DONE, state.collections[2].status);
+        TEST_ASSERT_EQUAL_HEX8_ARRAY(timestamp, metadata, 4);
+        
+        //test sampling interval
+        uint16_t samplingInterval=(uint16_t)metadata[4]<<8 | (uint16_t)metadata[5];
+        TEST_ASSERT_EQUAL_INT16(state.collections[2].samplingInterval, samplingInterval);
+
+        //test type
+        TEST_ASSERT_EQUAL_INT8(state.collections[2].type, metadata[6]);
+
+        //test body is updated
+        TEST_ASSERT_EQUAL_INT8(READY, state.bodies[0]);
+        TEST_ASSERT_EQUAL_INT8(WAITING, state.bodies[1]);
+        TEST_ASSERT_EQUAL_INT8(READY, state.bodies[2]);
+        TEST_ASSERT_EQUAL_INT8(READY, state.bodies[3]);
+
+}
+
+void test_set_collection_4(){
+     MRPP_STATE state={
+            .nCollections=3,
+            .lastSubId=3,
+            .collections={
+                {
+                    .id=1, 
+                    .startIndex=0, 
+                    .length=60+7,
+                    .type=T_INT16,
+                    .samplingInterval=300,
+                    .beginsInBody=0,
+                    .endsInBody=1,
+                    .status=DONE
+                },
+                {
+                    .id=2, 
+                    .startIndex=60+7, 
+                    .length=10+7,
+                    .type=T_INT16,
+                    .samplingInterval=40,
+                    .beginsInBody=1,
+                    .endsInBody=1,
+                    .status=WAITING 
+                },
+                    {
+                    .id=3, 
+                    .startIndex=84, 
+                    .length=70+7,
+                    .type=T_INT16,
+                    .samplingInterval=600,
+                    .beginsInBody=1,
+                    .endsInBody=3,
+                    .status=DONE 
+                }
+            },
+            .nBodies=4,
+            .bodies={READY, WAITING, READY, READY}
+        };
+
+        uint8_t timestamp[]={0x00, 0x01, 0x02, 0x03};
+        uint8_t collectionId=2;
+        uint8_t metadata[7];
+
+        mrpp_state_set_collection(&state, collectionId, timestamp, metadata);
+        
+        //test ts
+        TEST_ASSERT_EQUAL_INT8(DONE, state.collections[1].status);
+        TEST_ASSERT_EQUAL_HEX8_ARRAY(timestamp, metadata, 4);
+        
+        //test sampling interval
+        uint16_t samplingInterval=(uint16_t)metadata[4]<<8 | (uint16_t)metadata[5];
+        TEST_ASSERT_EQUAL_INT16(state.collections[1].samplingInterval, samplingInterval);
+
+        //test type
+        TEST_ASSERT_EQUAL_INT8(state.collections[1].type, metadata[6]);
+
+        //test body is updated
+        TEST_ASSERT_EQUAL_INT8(READY, state.bodies[0]);
+        TEST_ASSERT_EQUAL_INT8(READY, state.bodies[1]);
+        TEST_ASSERT_EQUAL_INT8(READY, state.bodies[2]);
+        TEST_ASSERT_EQUAL_INT8(READY, state.bodies[3]);
+
+}
+
 
 
 
@@ -99,5 +336,9 @@ int main(void){
     RUN_TEST(test_init);
     RUN_TEST(test_get_header);
     RUN_TEST(test_get_tail);
+    RUN_TEST(test_set_collection_1);
+    RUN_TEST(test_set_collection_2);
+    RUN_TEST(test_set_collection_3);
+    RUN_TEST(test_set_collection_4);
     return UNITY_END();
 }
