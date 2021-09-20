@@ -1,6 +1,6 @@
 #include "mrpp_state.h"
 
-void mrpp_state_update_bodies(MRPP_STATE *state, uint8_t collectionId);
+static void update_bodies(MRPP_STATE *state, uint8_t collectionId);
 
 void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[], uint8_t nCollections){
     state->groupId=groupId;
@@ -89,11 +89,11 @@ void mrpp_state_set_collection(MRPP_STATE *state, uint8_t collectionId, uint8_t 
     metadata[6]=state->collections[collectionId-1].type;
 
     //Update bodies
-    mrpp_state_update_bodies(state, collectionId);
+    update_bodies(state, collectionId);
 }
 
 
-void mrpp_state_update_bodies(MRPP_STATE *state, uint8_t collectionId){
+static void update_bodies(MRPP_STATE *state, uint8_t collectionId){
     
     //update begin
     bool beginIsDone=true;
@@ -144,5 +144,18 @@ void mrpp_state_update_bodies(MRPP_STATE *state, uint8_t collectionId){
     {
         state->bodies[i]=READY;
     }
+    
+}
+
+bool mrpp_state_is_body_ready(MRPP_STATE *state){
+    bool isReady=false;
+    for (uint8_t i = 0; i < state->nBodies; i++)
+    {
+        if(state->bodies[i]==READY){
+            isReady=true;
+            break;
+        }
+    }
+    return isReady;
     
 }

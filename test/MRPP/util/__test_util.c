@@ -1,6 +1,8 @@
 #include "../../../Unity/src/unity.h"
 #include "../../../src/MRPP/util/mrpp_state.h"
 
+#include <stdbool.h>
+
 void setUp(){}
 
 void tearDown(){}
@@ -327,6 +329,23 @@ void test_set_collection_4(){
 
 }
 
+void test_is_body_ready(){
+    MRPP_STATE state={
+        .nBodies=3,
+        .bodies={WAITING, WAITING, WAITING}
+    };
+
+    bool isReady=mrpp_state_is_body_ready(&state);
+    TEST_ASSERT_FALSE(isReady);
+
+    state.bodies[0]=READY;
+    isReady=mrpp_state_is_body_ready(&state);
+    TEST_ASSERT_TRUE(isReady);
+
+}
+
+
+
 
 
 
@@ -340,5 +359,6 @@ int main(void){
     RUN_TEST(test_set_collection_2);
     RUN_TEST(test_set_collection_3);
     RUN_TEST(test_set_collection_4);
+    RUN_TEST(test_is_body_ready);
     return UNITY_END();
 }

@@ -64,5 +64,6 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
 uint8_t mrpp_state_get_header(MRPP_STATE *state, uint8_t package[]);
 uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]);
 void mrpp_state_set_collection(MRPP_STATE *state, uint8_t collectionId, uint8_t timestamp[4], uint8_t metadata[7]);
+bool mrpp_state_is_body_ready(MRPP_STATE *state);
 
 #endif
