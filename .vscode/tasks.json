@@ -1,121 +1,152 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "cppbuild",
-			"label": "Compile code for debug",
-			"command": "C:\\MinGW\\bin\\gcc.exe",
-			"args": [
-				"-g",
-				"${workspaceFolder}\\src\\*.c",
-				"${workspaceFolder}\\src\\MRPP\\*.c",
-				"${workspaceFolder}\\src\\MRPP\\util\\*.c",
-				"-o",
-				"${workspaceFolder}\\bin\\main_debug.exe"
-			],
-			"options": {
-				"cwd": "${fileDirname}"
-			},
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": "build",
-			"detail": "compiler: C:\\MinGW\\bin\\gcc.exe",
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": false,
-				"panel": "dedicated",
-				"showReuseMessage": true,
-				"clear": true
-			}
-		},
-		{
-			"type": "cppbuild",
-			"label": "Build Test MRPP",
-			"command": "C:\\MinGW\\bin\\gcc.exe",
-			"args": [
-				"-g",
-				"${workspaceFolder}\\src\\MRPP\\*.c",
-				"${workspaceFolder}\\src\\MRPP\\util\\*.c",
-				"${workspaceFolder}\\test\\MRPP\\*.c",
-				"${workspaceFolder}\\Unity\\src\\*.c",
-				"-o",
-				"${workspaceFolder}\\bin\\test_MRPP.exe"
-			],
-			"options": {
-				"cwd": "${fileDirname}"
-			},
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": "build",
-			"detail": "compiler: C:\\MinGW\\bin\\gcc.exe",
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": true,
-				"panel": "dedicated",
-				"showReuseMessage": true,
-				"clear": true
-			}
-		},
-		{
-			"type": "cppbuild",
-			"label": "Build Test UTIL",
-			"command": "C:\\MinGW\\bin\\gcc.exe",
-			"args": [
-				"-g",
-				"${workspaceFolder}\\src\\MRPP\\*.c",
-				"${workspaceFolder}\\src\\MRPP\\util\\*.c",
-				"${workspaceFolder}\\test\\MRPP\\util\\*.c",
-				"${workspaceFolder}\\Unity\\src\\*.c",
-				"-o",
-				"${workspaceFolder}\\bin\\test_UTIL.exe"
-			],
-			"options": {
-				"cwd": "${fileDirname}"
-			},
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": "build",
-			"detail": "compiler: C:\\MinGW\\bin\\gcc.exe"
-		},
-		{
-			"type": "shell",
-			"label": "Run main_debug.exe",
-			"detail": "Run main_debug.exe",
-			"command":"${workspaceFolder}/bin/main_debug.exe",
-			"args": [],
-			"group": "test",
-			"dependsOn":["Compile code for debug"],
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": true,
-				"panel": "dedicated",
-				"showReuseMessage": true,
-				"clear": true
-			},
-		},
-			{
-			"type": "shell",
-			"label": "Run UTIL TEST",
-			"detail": "Run test_UTIL.exe",
-			"command":"${workspaceFolder}/bin/test_UTIL.exe",
-			"args": [],
-			"group": "test",
-			"dependsOn":["Build Test UTIL"],
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": true,
-				"panel": "dedicated",
-				"showReuseMessage": true,
-				"clear": true
-			},
-		},
-			
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cppbuild",
+      "label": "Compile code for debug",
+      "command": "C:\\MinGW\\bin\\gcc.exe",
+      "args": [
+        "-g",
+        "${workspaceFolder}\\src\\*.c",
+        "${workspaceFolder}\\src\\MRPP\\*.c",
+        "${workspaceFolder}\\src\\MRPP\\util\\*.c",
+        "-o",
+        "${workspaceFolder}\\bin\\main_debug.exe"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": "build",
+      "detail": "compiler: C:\\MinGW\\bin\\gcc.exe",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      }
+    },
+    {
+      "type": "cppbuild",
+      "label": "Build Test MRPP",
+      "command": "C:\\MinGW\\bin\\gcc.exe",
+      "args": [
+        "-g",
+        "${workspaceFolder}\\src\\MRPP\\*.c",
+        "${workspaceFolder}\\src\\MRPP\\util\\*.c",
+        "${workspaceFolder}\\test\\MRPP\\*.c",
+        "${workspaceFolder}\\Unity\\src\\*.c",
+        "-o",
+        "${workspaceFolder}\\bin\\test_MRPP.exe"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": "build",
+      "detail": "compiler: C:\\MinGW\\bin\\gcc.exe",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      }
+    },
+    {
+      "type": "cppbuild",
+      "label": "Build Test UTIL-STATE",
+      "command": "C:\\MinGW\\bin\\gcc.exe",
+      "args": [
+        "-g",
+        "${workspaceFolder}\\src\\MRPP\\*.c",
+        "${workspaceFolder}\\src\\MRPP\\util\\*.c",
+        "${workspaceFolder}\\test\\MRPP\\util\\__test_state.c",
+        "${workspaceFolder}\\Unity\\src\\*.c",
+        "-o",
+        "${workspaceFolder}\\bin\\test_UTIL-state.exe"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": "build",
+      "detail": "compiler: C:\\MinGW\\bin\\gcc.exe"
+    },
+    {
+      "type": "shell",
+      "label": "Run UTIL STATE TEST",
+      "detail": "Run test_UTIL-state.exe",
+      "command": "${workspaceFolder}/bin/test_UTIL-state.exe",
+      "args": [],
+      "group": "test",
+      "dependsOn": ["Build Test UTIL-STATE"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      }
+    },
+    {
+      "type": "cppbuild",
+      "label": "Build Test UTIL-DATA",
+      "command": "C:\\MinGW\\bin\\gcc.exe",
+      "args": [
+        "-D __TEST_MODE",
+        "-g",
+        "${workspaceFolder}\\src\\MRPP\\*.c",
+        "${workspaceFolder}\\src\\MRPP\\util\\*.c",
+        "${workspaceFolder}\\test\\MRPP\\util\\__test_data.c",
+        "${workspaceFolder}\\Unity\\src\\*.c",
+        "-o",
+        "${workspaceFolder}\\bin\\test_UTIL-data.exe"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": "build",
+      "detail": "compiler: C:\\MinGW\\bin\\gcc.exe"
+    },
+    {
+      "type": "shell",
+      "label": "Run UTIL DATA TEST",
+      "detail": "Run test_UTIL-data.exe",
+      "command": "${workspaceFolder}/bin/test_UTIL-data.exe",
+      "args": [],
+      "group": "test",
+      "dependsOn": ["Build Test UTIL-DATA"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Run main_debug.exe",
+      "detail": "Run main_debug.exe",
+      "command": "${workspaceFolder}/bin/main_debug.exe",
+      "args": [],
+      "group": "test",
+      "dependsOn": ["Compile code for debug"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      }
+    }
+  ]
 }
