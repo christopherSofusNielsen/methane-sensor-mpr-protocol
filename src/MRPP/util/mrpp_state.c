@@ -182,6 +182,10 @@ void mrpp_state_get_body_address(MRPP_STATE *state, uint16_t *begin, uint8_t*len
     }else{
         *length=(state->collections[state->nCollections-1].startIndex+state->collections[state->nCollections-1].length)%DR_BODY_PAYLOAD_SIZE; 
     }  
+}
 
 
+void mrpp_state_get_collection_address(MRPP_STATE *state, uint8_t collectionId, uint16_t *begin, uint16_t*length){
+    *begin=state->collections[collectionId-1].startIndex;
+    *length=state->collections[collectionId-1].length;
 }

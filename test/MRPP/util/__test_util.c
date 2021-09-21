@@ -395,6 +395,34 @@ void test_get_body_address_2(){
 
     TEST_ASSERT_EQUAL_INT16(96, begin);
     TEST_ASSERT_EQUAL_INT8(24, len);
+}
+
+void test_get_collection_address_1(){
+     MRPP_STATE state={
+        .nCollections=2,
+        .collections={
+            {
+                .startIndex=0,
+                .length=80+7
+            },
+            {
+                .startIndex=80+7,
+                .length=40+7
+            }
+        },
+    };
+
+
+    uint16_t begin;
+    uint16_t length;
+
+    mrpp_state_get_collection_address(&state, 1, &begin, &length);
+    TEST_ASSERT_EQUAL_INT16(0, begin);
+    TEST_ASSERT_EQUAL_INT16(87, length);
+
+    mrpp_state_get_collection_address(&state, 2, &begin, &length);
+    TEST_ASSERT_EQUAL_INT16(87, begin);
+    TEST_ASSERT_EQUAL_INT16(47, length);
 
 }
 
@@ -416,5 +444,6 @@ int main(void){
     RUN_TEST(test_is_body_ready);
     RUN_TEST(test_get_body_address_1);
     RUN_TEST(test_get_body_address_2);
+    RUN_TEST(test_get_collection_address_1);
     return UNITY_END();
 }
