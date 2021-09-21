@@ -6,6 +6,7 @@
       "label": "Build Test MRPP",
       "command": "C:\\MinGW\\bin\\gcc.exe",
       "args": [
+        "-D __TEST_MODE",
         "-g",
         "${workspaceFolder}\\src\\MRPP\\*.c",
         "${workspaceFolder}\\src\\MRPP\\util\\*.c",

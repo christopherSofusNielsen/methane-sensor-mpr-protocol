@@ -16,9 +16,11 @@ void test_init(){
     mrpp_state_init(&state, 10, cols, 2);
 
     TEST_ASSERT_EQUAL_INT8(10, state.groupId);
-    uint8_t lastSubId=(10*2+7+20*2+7)/48+1+2;
-    TEST_ASSERT_EQUAL_INT16(lastSubId, state.lastSubId);
 
+    TEST_ASSERT_EQUAL_INT16(3, state.lastSubId);
+
+    TEST_ASSERT_EQUAL_INT8(2, state.nCollections);
+    
     TEST_ASSERT_EQUAL_INT8(1, state.collections[0].id);
     TEST_ASSERT_EQUAL_INT8(2, state.collections[1].id);
     TEST_ASSERT_EQUAL_INT16(0, state.collections[0].startIndex);
@@ -27,6 +29,11 @@ void test_init(){
     TEST_ASSERT_EQUAL_INT16(20*2+7, state.collections[1].length);
     TEST_ASSERT_EQUAL_INT16(30, state.collections[0].samplingInterval);
     TEST_ASSERT_EQUAL_INT16(15, state.collections[1].samplingInterval);
+
+    //type
+    TEST_ASSERT_EQUAL_INT8(T_INT16, state.collections[0].type);
+    TEST_ASSERT_EQUAL_INT8(T_INT16, state.collections[1].type);
+
     
     //start and ending body
     TEST_ASSERT_EQUAL_INT8(0, state.collections[0].beginsInBody);

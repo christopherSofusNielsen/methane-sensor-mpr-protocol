@@ -4,12 +4,16 @@ static void update_bodies(MRPP_STATE *state, uint8_t collectionId);
 
 void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[], uint8_t nCollections){
     state->groupId=groupId;
+    state->nCollections=nCollections;
 
     uint16_t startingIndex=0;
     for (uint8_t i = 0; i < nCollections; i++)
     {
         state->collections[i].id=i+1;
         state->collections[i].samplingInterval=collections[i].samplingInterval;
+
+        //type
+        state->collections[i].type=collections[i].type;
 
         //Calculate length and set starting index
         state->collections[i].startIndex=startingIndex;
@@ -29,7 +33,7 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
     }
 
     //Calculate lastSubId
-    uint8_t lastSubId=startingIndex/DR_BODY_PAYLOAD_SIZE+1+DR_SUBID_OVERHEAD;
+    uint8_t lastSubId=startingIndex/DR_BODY_PAYLOAD_SIZE+DR_SUBID_OVERHEAD;
     state->lastSubId=lastSubId;
     
     //calculate bodies
