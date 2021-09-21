@@ -7,47 +7,63 @@ void setUp(){}
 
 void tearDown(){}
 
-void test_init(){
+void test_init_1(){
     MRPP_STATE state;
     COLLECTION cols[2]={
         {.samplings=10, .type=T_INT16, .samplingInterval=30},
         {.samplings=20, .type=T_INT16, .samplingInterval=15}
     };
-    mrpp_state_init(&state, 10, cols, 2);
+    mrpp_state_init(&state, 1, cols, 2);
 
-    TEST_ASSERT_EQUAL_INT8(10, state.groupId);
+    TEST_ASSERT_EQUAL_UINT8(1, state.groupId);
+    TEST_ASSERT_EQUAL_UINT8(3, state.lastSubId);
+    TEST_ASSERT_EQUAL_UINT8(2, state.nCollections);
+    TEST_ASSERT_EQUAL_UINT8(2, state.nBodies);
 
-    TEST_ASSERT_EQUAL_INT16(3, state.lastSubId);
+    //Test bodies
+    TEST_ASSERT_EACH_EQUAL_UINT8(WAITING, state.bodies, 2);
+   
+    //Test collections
+    TEST_ASSERT_EQUAL_UINT16(0, state.collections[0].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(27, state.collections[0].length);
+    TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[0].type);
+    TEST_ASSERT_EQUAL_UINT16(30, state.collections[0].samplingInterval);
+    TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
 
-    TEST_ASSERT_EQUAL_INT8(2, state.nCollections);
-    
-    TEST_ASSERT_EQUAL_INT8(1, state.collections[0].id);
-    TEST_ASSERT_EQUAL_INT8(2, state.collections[1].id);
-    TEST_ASSERT_EQUAL_INT16(0, state.collections[0].startIndex);
-    TEST_ASSERT_EQUAL_INT16(10*2+7, state.collections[1].startIndex);
-    TEST_ASSERT_EQUAL_INT16(10*2+7, state.collections[0].length);
-    TEST_ASSERT_EQUAL_INT16(20*2+7, state.collections[1].length);
-    TEST_ASSERT_EQUAL_INT16(30, state.collections[0].samplingInterval);
-    TEST_ASSERT_EQUAL_INT16(15, state.collections[1].samplingInterval);
+    TEST_ASSERT_EQUAL_UINT16(27, state.collections[1].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(47, state.collections[1].length);
+    TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[1].type);
+    TEST_ASSERT_EQUAL_UINT16(15, state.collections[1].samplingInterval);
+    TEST_ASSERT_EQUAL_UINT8(0, state.collections[1].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(1, state.collections[1].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[1].status);
+}
 
-    //type
-    TEST_ASSERT_EQUAL_INT8(T_INT16, state.collections[0].type);
-    TEST_ASSERT_EQUAL_INT8(T_INT16, state.collections[1].type);
+void test_init_2(){
+    MRPP_STATE state;
+    COLLECTION cols[2]={
+        {.samplings=41, .type=T_INT8, .samplingInterval=30},
+    };
+    mrpp_state_init(&state, 10, cols, 1);
 
-    
-    //start and ending body
-    TEST_ASSERT_EQUAL_INT8(0, state.collections[0].beginsInBody);
-    TEST_ASSERT_EQUAL_INT8(0, state.collections[0].endsInBody);
-    TEST_ASSERT_EQUAL_INT8(0, state.collections[1].beginsInBody);
-    TEST_ASSERT_EQUAL_INT8(1, state.collections[1].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(10, state.groupId);
+    TEST_ASSERT_EQUAL_UINT8(2, state.lastSubId);
+    TEST_ASSERT_EQUAL_UINT8(1, state.nCollections);
+    TEST_ASSERT_EQUAL_UINT8(1, state.nBodies);
 
-    //Collection status
-    TEST_ASSERT_EQUAL(WAITING, state.collections[0].status);
-    TEST_ASSERT_EQUAL(WAITING, state.collections[1].status);
+    //Test bodies
+    TEST_ASSERT_EACH_EQUAL_UINT8(WAITING, state.bodies, 1);
 
-    //Bodies
-    TEST_ASSERT_EQUAL_INT8(2, state.nBodies);
-    TEST_ASSERT_EACH_EQUAL_INT(WAITING, state.bodies, 2);
+    //Test collections
+    TEST_ASSERT_EQUAL_UINT16(0, state.collections[0].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(48, state.collections[0].length);
+    TEST_ASSERT_EQUAL_UINT8(T_INT8, state.collections[0].type);
+    TEST_ASSERT_EQUAL_UINT16(30, state.collections[0].samplingInterval);
+    TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
 }
 
 void test_get_header(){
@@ -441,7 +457,8 @@ void test_get_collection_address_1(){
 
 int main(void){
     UNITY_BEGIN();
-    RUN_TEST(test_init);
+    RUN_TEST(test_init_1);
+    RUN_TEST(test_init_2);
     RUN_TEST(test_get_header);
     RUN_TEST(test_get_tail);
     RUN_TEST(test_set_collection_1);
