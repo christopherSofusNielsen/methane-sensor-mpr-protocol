@@ -1,6 +1,6 @@
 #include "mrpp_data.h"
 
-uint8_t storage[800];
+uint8_t storage[BODY_BUFFER_DATA_SIZE];
 
 void mrpp_data_add_int16(uint8_t metadata[7], uint16_t values[], uint16_t begin, uint16_t length){
     
@@ -21,4 +21,12 @@ void mrpp_data_add_int16(uint8_t metadata[7], uint16_t values[], uint16_t begin,
         storage[offset_LSB + i*2]=values[i];
     }
 
+}
+
+void mrpp_data_get(uint8_t data[], uint16_t begin, uint16_t length){
+    for (uint16_t i = 0; i < length; i++)
+    {
+        data[i]=storage[begin+i];
+    }
+    
 }
