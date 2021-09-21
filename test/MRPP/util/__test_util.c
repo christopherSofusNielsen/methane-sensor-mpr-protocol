@@ -362,12 +362,12 @@ void test_get_body_address_1(){
     };
 
     uint16_t begin;
-    uint16_t end;
+    uint8_t len;
 
-    mrpp_state_get_body_address(&state, &begin, &end);
+    mrpp_state_get_body_address(&state, &begin, &len);
 
     TEST_ASSERT_EQUAL_INT16(48, begin);
-    TEST_ASSERT_EQUAL_INT16(95, end);
+    TEST_ASSERT_EQUAL_INT8(48, len);
 
 }
 
@@ -389,12 +389,12 @@ void test_get_body_address_2(){
     };
 
     uint16_t begin;
-    uint16_t end;
+    uint8_t len;
 
-    mrpp_state_get_body_address(&state, &begin, &end);
+    mrpp_state_get_body_address(&state, &begin, &len);
 
     TEST_ASSERT_EQUAL_INT16(96, begin);
-    TEST_ASSERT_EQUAL_INT16(119, end);
+    TEST_ASSERT_EQUAL_INT8(24, len);
 
 }
 
