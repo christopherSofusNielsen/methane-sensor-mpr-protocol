@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define COLLECTION_DATA_META_SIZE 7
+#define COLLECTION_DATA_META_SIZE 6
 #define DR_BODY_PAYLOAD_SIZE 48
 #define DR_SUBID_OVERHEAD 2
 #define MAX_BODIES 30

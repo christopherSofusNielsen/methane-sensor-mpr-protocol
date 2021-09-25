@@ -17,23 +17,23 @@ void test_init_1(){
 
     TEST_ASSERT_EQUAL_UINT8(1, state.groupId);
     TEST_ASSERT_EQUAL_UINT8(3, state.lastSubId);
-    TEST_ASSERT_EQUAL_UINT8(2, state.nCollections);
     TEST_ASSERT_EQUAL_UINT8(2, state.nBodies);
+    TEST_ASSERT_EQUAL_UINT8(2, state.nCollections);
 
     //Test bodies
     TEST_ASSERT_EACH_EQUAL_UINT8(WAITING, state.bodies, 2);
    
     //Test collections
     TEST_ASSERT_EQUAL_UINT16(0, state.collections[0].startIndex);
-    TEST_ASSERT_EQUAL_UINT16(27, state.collections[0].length);
+    TEST_ASSERT_EQUAL_UINT16(26, state.collections[0].length);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[0].type);
     TEST_ASSERT_EQUAL_UINT16(30, state.collections[0].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].endsInBody);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
 
-    TEST_ASSERT_EQUAL_UINT16(27, state.collections[1].startIndex);
-    TEST_ASSERT_EQUAL_UINT16(47, state.collections[1].length);
+    TEST_ASSERT_EQUAL_UINT16(26, state.collections[1].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(46, state.collections[1].length);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[1].type);
     TEST_ASSERT_EQUAL_UINT16(15, state.collections[1].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[1].beginsInBody);
@@ -44,14 +44,14 @@ void test_init_1(){
 void test_init_2(){
     MRPP_STATE state;
     COLLECTION cols[2]={
-        {.samplings=41, .type=T_INT8, .samplingInterval=30},
+        {.samplings=42, .type=T_INT8, .samplingInterval=30},
     };
     mrpp_state_init(&state, 10, cols, 1);
 
     TEST_ASSERT_EQUAL_UINT8(10, state.groupId);
     TEST_ASSERT_EQUAL_UINT8(2, state.lastSubId);
-    TEST_ASSERT_EQUAL_UINT8(1, state.nCollections);
     TEST_ASSERT_EQUAL_UINT8(1, state.nBodies);
+    TEST_ASSERT_EQUAL_UINT8(1, state.nCollections);
 
     //Test bodies
     TEST_ASSERT_EACH_EQUAL_UINT8(WAITING, state.bodies, 1);
@@ -70,29 +70,29 @@ void test_init_3(){
     MRPP_STATE state;
     COLLECTION cols[2]={
         {.samplings=20, .type=T_INT16, .samplingInterval=15},
-        {.samplings=42, .type=T_INT8, .samplingInterval=15}
+        {.samplings=44, .type=T_INT8, .samplingInterval=15}
     };
     mrpp_state_init(&state, 1, cols, 2);
 
     TEST_ASSERT_EQUAL_UINT8(1, state.groupId);
     TEST_ASSERT_EQUAL_UINT8(3, state.lastSubId);
-    TEST_ASSERT_EQUAL_UINT8(2, state.nCollections);
     TEST_ASSERT_EQUAL_UINT8(2, state.nBodies);
+    TEST_ASSERT_EQUAL_UINT8(2, state.nCollections);
 
     //Test bodies
     TEST_ASSERT_EACH_EQUAL_UINT8(WAITING, state.bodies, 2);
    
     //Test collections
     TEST_ASSERT_EQUAL_UINT16(0, state.collections[0].startIndex);
-    TEST_ASSERT_EQUAL_UINT16(47, state.collections[0].length);
+    TEST_ASSERT_EQUAL_UINT16(46, state.collections[0].length);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[0].type);
     TEST_ASSERT_EQUAL_UINT16(15, state.collections[0].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].endsInBody);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
 
-    TEST_ASSERT_EQUAL_UINT16(47, state.collections[1].startIndex);
-    TEST_ASSERT_EQUAL_UINT16(49, state.collections[1].length);
+    TEST_ASSERT_EQUAL_UINT16(46, state.collections[1].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(50, state.collections[1].length);
     TEST_ASSERT_EQUAL_UINT8(T_INT8, state.collections[1].type);
     TEST_ASSERT_EQUAL_UINT16(15, state.collections[1].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[1].beginsInBody);
