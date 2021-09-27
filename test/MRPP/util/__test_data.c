@@ -12,15 +12,15 @@ void setUp(){}
 void tearDown(){}
 
 void test_add_int16(){
-    uint8_t metadata[]={0x00, 0x01, 0x02,0x03,0x04,0x05,0x06};
+    uint8_t metadata[]={0x00, 0x01, 0x02,0x03,0x04,0x05};
     uint16_t values[]={1000, 100, 2002};
     uint8_t values_test[]={0x03, 0xE8, 0x00, 0x64, 0x07, 0xD2};
     uint16_t begin=0;
-    uint16_t length=13;
+    uint16_t length=12;
 
     mrpp_data_add_int16(metadata, values, begin, length);
-    TEST_ASSERT_TRUE(test_array_range(metadata, 0, storage, begin, 7));
-    TEST_ASSERT_TRUE(test_array_range(values_test, 0, storage, begin+7, 6));
+    TEST_ASSERT_TRUE(test_array_range(metadata, 0, storage, begin, 6));
+    TEST_ASSERT_TRUE(test_array_range(values_test, 0, storage, begin+6, 6));
 }
 
 void test_get_1(){

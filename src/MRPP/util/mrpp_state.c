@@ -10,7 +10,6 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
     uint16_t startingIndex=0;
     for (uint8_t i = 0; i < nCollections; i++)
     {
-        state->collections[i].id=i+1;
         state->collections[i].samplingInterval=collections[i].samplingInterval;
 
         //type

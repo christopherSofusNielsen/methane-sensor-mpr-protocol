@@ -112,8 +112,8 @@ void test_get_header_1(){
         .nCollections=2,
         .lastSubId=3,
         .collections={
-            {.id=1, .startIndex=0, .length=26, .type=T_INT16},
-            {.id=2, .startIndex=26, .length=46, .type=T_INT16}
+            {.startIndex=0, .length=26, .type=T_INT16},
+            {.startIndex=26, .length=46, .type=T_INT16}
         }
     };
     uint8_t package[51];
@@ -169,8 +169,8 @@ void test_get_tail_1(){
                 .nCollections=2,
                 .lastSubId=3,
                 .collections={
-                    {.id=1, .startIndex=0, .length=26, .type=T_INT16},
-                    {.id=2, .startIndex=26, .length=46, .type=T_INT16}
+                    { .startIndex=0, .length=26, .type=T_INT16},
+                    { .startIndex=26, .length=46, .type=T_INT16}
                 }
             };
 

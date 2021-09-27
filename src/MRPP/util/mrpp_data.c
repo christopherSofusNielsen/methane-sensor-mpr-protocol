@@ -2,19 +2,19 @@
 
 uint8_t storage[BODY_BUFFER_DATA_SIZE];
 
-void mrpp_data_add_int16(uint8_t metadata[7], uint16_t values[], uint16_t begin, uint16_t length){
+void mrpp_data_add_int16(uint8_t metadata[6], uint16_t values[], uint16_t begin, uint16_t length){
     
     //add meta
-    for (uint8_t i = begin; i < begin+7; i++)
+    for (uint8_t i = begin; i < begin+COLLECTION_DATA_META_SIZE; i++)
     {
         storage[i]=metadata[i-begin];
     }
-    length-=7;
+    length-=COLLECTION_DATA_META_SIZE;
 
     //add values  
     uint16_t valuesLength=length/2;
-    const uint16_t offset_MSB=begin+7;
-    const uint16_t offset_LSB=begin+8;
+    const uint16_t offset_MSB=begin+COLLECTION_DATA_META_SIZE;
+    const uint16_t offset_LSB=begin+COLLECTION_DATA_META_SIZE+1;
     for (uint16_t i = 0; i < valuesLength; i++)
     {
         storage[offset_MSB + i*2]=values[i]>>8;

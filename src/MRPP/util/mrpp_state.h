@@ -4,12 +4,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
-#define COLLECTION_DATA_META_SIZE 6
-#define DR_BODY_PAYLOAD_SIZE 48
-#define DR_SUBID_OVERHEAD 2
-#define MAX_BODIES 30
-#define DR_HEADER_COLLECTION_META_SIZE 4
+#include "../params.h"
 
 typedef enum {
     T_INT8=1,
@@ -33,7 +28,6 @@ typedef struct COLLECTION
 
 typedef struct __COLLECTION_STATE
 {
-    uint8_t id;
     uint16_t startIndex;
     uint16_t length;
     MEASURE_TYPE type;
