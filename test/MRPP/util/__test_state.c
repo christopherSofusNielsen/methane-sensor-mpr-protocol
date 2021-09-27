@@ -532,11 +532,11 @@ void test_get_collection_address_1(){
         .collections={
             {
                 .startIndex=0,
-                .length=80+7
+                .length=86
             },
             {
-                .startIndex=80+7,
-                .length=40+7
+                .startIndex=86,
+                .length=46
             }
         },
     };
@@ -547,11 +547,11 @@ void test_get_collection_address_1(){
 
     mrpp_state_get_collection_address(&state, 1, &begin, &length);
     TEST_ASSERT_EQUAL_INT16(0, begin);
-    TEST_ASSERT_EQUAL_INT16(87, length);
+    TEST_ASSERT_EQUAL_INT16(86, length);
 
     mrpp_state_get_collection_address(&state, 2, &begin, &length);
-    TEST_ASSERT_EQUAL_INT16(87, begin);
-    TEST_ASSERT_EQUAL_INT16(47, length);
+    TEST_ASSERT_EQUAL_INT16(86, begin);
+    TEST_ASSERT_EQUAL_INT16(46, length);
 
 }
 
