@@ -40,15 +40,15 @@ void test_init_group__state_init_1(){
 
     //Test collections
     TEST_ASSERT_EQUAL_UINT16(0, state.collections[0].startIndex);
-    TEST_ASSERT_EQUAL_UINT16(67, state.collections[0].length);
+    TEST_ASSERT_EQUAL_UINT16(66, state.collections[0].length);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[0].type);
     TEST_ASSERT_EQUAL_UINT16(30, state.collections[0].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(1, state.collections[0].endsInBody);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
 
-    TEST_ASSERT_EQUAL_UINT16(67, state.collections[1].startIndex);
-    TEST_ASSERT_EQUAL_UINT16(27, state.collections[1].length);
+    TEST_ASSERT_EQUAL_UINT16(66, state.collections[1].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(26, state.collections[1].length);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[1].type);
     TEST_ASSERT_EQUAL_UINT16(120, state.collections[1].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(1, state.collections[1].beginsInBody);
@@ -59,7 +59,7 @@ void test_init_group__state_init_1(){
 
 void test_init_group__state_init_2(){
     COLLECTION collections[]={
-        {.samplingInterval=30, .samplings=41, .type=T_INT8},
+        {.samplingInterval=30, .samplings=42, .type=T_INT8},
     };
     
     MRPP_init_group(collections, 1);
@@ -106,7 +106,7 @@ void test_init_group__state_init_real_world(){
     //Test collections 0
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(2, state.collections[0].endsInBody);
-    TEST_ASSERT_EQUAL_UINT16(127, state.collections[0].length);
+    TEST_ASSERT_EQUAL_UINT16(126, state.collections[0].length);
     TEST_ASSERT_EQUAL_UINT16(0, state.collections[0].startIndex);
     TEST_ASSERT_EQUAL_UINT16(60, state.collections[0].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[0].type);
@@ -115,8 +115,8 @@ void test_init_group__state_init_real_world(){
     //Test collections 1
     TEST_ASSERT_EQUAL_UINT8(2, state.collections[1].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(3, state.collections[1].endsInBody);
-    TEST_ASSERT_EQUAL_UINT16(27, state.collections[1].length);
-    TEST_ASSERT_EQUAL_UINT16(127, state.collections[1].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(26, state.collections[1].length);
+    TEST_ASSERT_EQUAL_UINT16(126, state.collections[1].startIndex);
     TEST_ASSERT_EQUAL_UINT16(60, state.collections[1].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[1].type);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[1].status);
@@ -124,8 +124,8 @@ void test_init_group__state_init_real_world(){
     //Test collections 2
     TEST_ASSERT_EQUAL_UINT8(3, state.collections[2].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(3, state.collections[2].endsInBody);
-    TEST_ASSERT_EQUAL_UINT16(27, state.collections[2].length);
-    TEST_ASSERT_EQUAL_UINT16(154, state.collections[2].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(26, state.collections[2].length);
+    TEST_ASSERT_EQUAL_UINT16(152, state.collections[2].startIndex);
     TEST_ASSERT_EQUAL_UINT16(60, state.collections[2].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[2].type);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[2].status);
@@ -133,8 +133,8 @@ void test_init_group__state_init_real_world(){
     //Test collections 3
     TEST_ASSERT_EQUAL_UINT8(3, state.collections[3].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(5, state.collections[3].endsInBody);
-    TEST_ASSERT_EQUAL_UINT16(67, state.collections[3].length);
-    TEST_ASSERT_EQUAL_UINT16(181, state.collections[3].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(66, state.collections[3].length);
+    TEST_ASSERT_EQUAL_UINT16(178, state.collections[3].startIndex);
     TEST_ASSERT_EQUAL_UINT16(10, state.collections[3].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[3].type);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[3].status);
@@ -142,8 +142,8 @@ void test_init_group__state_init_real_world(){
     //Test collections 4
     TEST_ASSERT_EQUAL_UINT8(5, state.collections[4].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(6, state.collections[4].endsInBody);
-    TEST_ASSERT_EQUAL_UINT16(67, state.collections[4].length);
-    TEST_ASSERT_EQUAL_UINT16(248, state.collections[4].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(66, state.collections[4].length);
+    TEST_ASSERT_EQUAL_UINT16(244, state.collections[4].startIndex);
     TEST_ASSERT_EQUAL_UINT16(10, state.collections[4].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[4].type);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[4].status);
@@ -151,8 +151,8 @@ void test_init_group__state_init_real_world(){
     //Test collections 5
     TEST_ASSERT_EQUAL_UINT8(6, state.collections[5].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(12, state.collections[5].endsInBody);
-    TEST_ASSERT_EQUAL_UINT16(307, state.collections[5].length);
-    TEST_ASSERT_EQUAL_UINT16(315, state.collections[5].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(306, state.collections[5].length);
+    TEST_ASSERT_EQUAL_UINT16(310, state.collections[5].startIndex);
     TEST_ASSERT_EQUAL_UINT16(2, state.collections[5].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[5].type);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[5].status);
@@ -160,8 +160,8 @@ void test_init_group__state_init_real_world(){
     //Test collections 6
     TEST_ASSERT_EQUAL_UINT8(12, state.collections[6].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(13, state.collections[6].endsInBody);
-    TEST_ASSERT_EQUAL_UINT16(17, state.collections[6].length);
-    TEST_ASSERT_EQUAL_UINT16(622, state.collections[6].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(16, state.collections[6].length);
+    TEST_ASSERT_EQUAL_UINT16(616, state.collections[6].startIndex);
     TEST_ASSERT_EQUAL_UINT16(60, state.collections[6].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[6].type);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[6].status);
