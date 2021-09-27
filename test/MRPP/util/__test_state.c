@@ -100,7 +100,7 @@ void test_init_3(){
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[1].status);
 }
 
-void test_get_header(){
+void test_get_header_1(){
     uint8_t test_package[]={
         0x0, 0x3, 
         0x0, 
@@ -123,29 +123,62 @@ void test_get_header(){
     TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 14);
 }
 
+void test_get_header_2(){
+    uint8_t test_package[]={
+        0x0, 0x10, 
+        0x0, 
+        0x0, 0xf, 0xa5, 
+        0x0, 0x0, 0x1, 0x96, 
+        0x1, 0x96, 0x0, 0x1a, 
+        0x1, 0xb0, 0x0, 0x2e, 
+        0x1, 0xde, 0x0, 0x2e, 
+        0x2, 0xc, 0x0, 0x56, 
+        0x2, 0x62, 0x0, 0x56
+    };
+    MRPP_STATE state={
+        .nCollections=6,
+        .lastSubId=16,
+        .collections={
+            {.startIndex=0, .length=406, .type=T_INT8},
+            {.startIndex=406, .length=26, .type=T_INT8},
+            {.startIndex=432, .length=46, .type=T_INT16},
+            {.startIndex=478, .length=46, .type=T_INT16},
+            {.startIndex=524, .length=86, .type=T_FLOAT},
+            {.startIndex=610, .length=86, .type=T_FLOAT},
+        }
+    };
+    uint8_t package[51];
+    uint8_t length=mrpp_state_get_header(&state, package);
 
-void test_get_tail(){
-        MRPP_STATE state={
-            .nCollections=2,
-            .lastSubId=3,
-            .collections={
-                {.id=1, .startIndex=0, .length=10+7, },
-                {.id=2, .startIndex=10+7, .length=12+7 }
-            }
+    TEST_ASSERT_EQUAL_INT8(30, length);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 30);
+}
+
+
+void test_get_tail_1(){
+
+        uint8_t test_package[]={
+                0x3, 0x3, 
+                0x0, 
+                0x0, 0x0, 0xa, 
+                0x0, 0x0, 0x0, 0x1a, 
+                0x0, 0x1a, 0x0, 0x2e
             };
 
-         uint8_t test_package[]={
-            0x03, //subId=3 
-            0x03, //lastSubId=3
-            0x00, 0x00, 0x00, 0x11, //startIndex=0, length=17
-            0x00, 0x11,0x00, 0x13 //startIndex=17, length=19
+        MRPP_STATE state={
+                .nCollections=2,
+                .lastSubId=3,
+                .collections={
+                    {.id=1, .startIndex=0, .length=26, .type=T_INT16},
+                    {.id=2, .startIndex=26, .length=46, .type=T_INT16}
+                }
             };
 
         uint8_t package[51];
         uint8_t length=mrpp_state_get_tail(&state, package);
 
-        TEST_ASSERT_EQUAL_INT8(2+2*4, length);
-        TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 10);
+        TEST_ASSERT_EQUAL_INT8(14, length);
+        TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 14);
 
 }
 
@@ -155,46 +188,42 @@ void test_set_collection_1(){
             .lastSubId=3,
             .collections={
                 {
-                    .id=1, 
                     .startIndex=0, 
-                    .length=10+7,
+                    .length=26,
                     .type=T_INT16,
-                    .samplingInterval=300,
+                    .samplingInterval=30,
                     .beginsInBody=0,
                     .endsInBody=0,
                     .status=WAITING
                 },
                 {
-                    .id=2, 
-                    .startIndex=10+7, 
-                    .length=12+7,
+                    .startIndex=26, 
+                    .length=46,
                     .type=T_INT16,
-                    .samplingInterval=40,
+                    .samplingInterval=15,
                     .beginsInBody=0,
-                    .endsInBody=0,
+                    .endsInBody=1,
                     .status=WAITING 
                 }
             },
-            .nBodies=1,
-            .bodies={WAITING}
+            .nBodies=2,
+            .bodies={WAITING, WAITING}
         };
 
         uint8_t timestamp[]={0x00, 0x01, 0x02, 0x03};
         uint8_t collectionId=1;
-        uint8_t metadata[7];
+        uint8_t metadata[6];
 
         mrpp_state_set_collection(&state, collectionId, timestamp, metadata);
         
-        //test ts
         TEST_ASSERT_EQUAL_INT8(DONE, state.collections[0].status);
+        
+        //test ts
         TEST_ASSERT_EQUAL_HEX8_ARRAY(timestamp, metadata, 4);
         
         //test sampling interval
         uint16_t samplingInterval=(uint16_t)metadata[4]<<8 | (uint16_t)metadata[5];
         TEST_ASSERT_EQUAL_INT16(state.collections[0].samplingInterval, samplingInterval);
-
-        //test type
-        TEST_ASSERT_EQUAL_INT8(state.collections[0].type, metadata[6]);
 
         //test body is updated
         TEST_ASSERT_EQUAL_INT8(WAITING, state.bodies[0]);
@@ -204,12 +233,11 @@ void test_set_collection_1(){
 void test_set_collection_2(){
      MRPP_STATE state={
             .nCollections=2,
-            .lastSubId=3,
+            .lastSubId=4,
             .collections={
                 {
-                    .id=1, 
                     .startIndex=0, 
-                    .length=50+7,
+                    .length=56,
                     .type=T_INT16,
                     .samplingInterval=300,
                     .beginsInBody=0,
@@ -217,64 +245,58 @@ void test_set_collection_2(){
                     .status=WAITING
                 },
                 {
-                    .id=2, 
-                    .startIndex=50+7, 
-                    .length=40+7,
+                    .startIndex=56, 
+                    .length=66,
                     .type=T_INT16,
                     .samplingInterval=40,
                     .beginsInBody=1,
-                    .endsInBody=3,
+                    .endsInBody=2,
                     .status=WAITING 
                 }
             },
-            .nBodies=4,
-            .bodies={WAITING, WAITING, WAITING, WAITING}
+            .nBodies=3,
+            .bodies={WAITING, WAITING, WAITING}
         };
 
         uint8_t timestamp[]={0x00, 0x01, 0x02, 0x03};
         uint8_t collectionId=2;
-        uint8_t metadata[7];
+        uint8_t metadata[6];
 
         mrpp_state_set_collection(&state, collectionId, timestamp, metadata);
         
-        //test ts
         TEST_ASSERT_EQUAL_INT8(DONE, state.collections[1].status);
+        
+        //test ts
         TEST_ASSERT_EQUAL_HEX8_ARRAY(timestamp, metadata, 4);
         
         //test sampling interval
         uint16_t samplingInterval=(uint16_t)metadata[4]<<8 | (uint16_t)metadata[5];
         TEST_ASSERT_EQUAL_INT16(state.collections[1].samplingInterval, samplingInterval);
 
-        //test type
-        TEST_ASSERT_EQUAL_INT8(state.collections[1].type, metadata[6]);
 
         //test body is updated
         TEST_ASSERT_EQUAL_INT8(WAITING, state.bodies[0]);
         TEST_ASSERT_EQUAL_INT8(WAITING, state.bodies[1]);
         TEST_ASSERT_EQUAL_INT8(READY, state.bodies[2]);
-        TEST_ASSERT_EQUAL_INT8(READY, state.bodies[3]);
-
 }
 
 void test_set_collection_3(){
      MRPP_STATE state={
             .nCollections=3,
-            .lastSubId=3,
+            .lastSubId=5,
             .collections={
-                {
-                    .id=1, 
+                { 
                     .startIndex=0, 
-                    .length=60+7,
+                    .length=66,
                     .type=T_INT16,
                     .samplingInterval=300,
                     .beginsInBody=0,
                     .endsInBody=1,
                     .status=DONE
                 },
-                {
-                    .id=2, 
-                    .startIndex=60+7, 
-                    .length=10+7,
+                { 
+                    .startIndex=66, 
+                    .length=16,
                     .type=T_INT16,
                     .samplingInterval=40,
                     .beginsInBody=1,
@@ -282,9 +304,8 @@ void test_set_collection_3(){
                     .status=WAITING 
                 },
                     {
-                    .id=3, 
-                    .startIndex=84, 
-                    .length=70+7,
+                    .startIndex=82, 
+                    .length=76,
                     .type=T_INT16,
                     .samplingInterval=600,
                     .beginsInBody=1,
@@ -298,20 +319,19 @@ void test_set_collection_3(){
 
         uint8_t timestamp[]={0x00, 0x01, 0x02, 0x03};
         uint8_t collectionId=3;
-        uint8_t metadata[7];
+        uint8_t metadata[6];
 
         mrpp_state_set_collection(&state, collectionId, timestamp, metadata);
         
-        //test ts
         TEST_ASSERT_EQUAL_INT8(DONE, state.collections[2].status);
+        
+        //test ts
         TEST_ASSERT_EQUAL_HEX8_ARRAY(timestamp, metadata, 4);
         
         //test sampling interval
         uint16_t samplingInterval=(uint16_t)metadata[4]<<8 | (uint16_t)metadata[5];
         TEST_ASSERT_EQUAL_INT16(state.collections[2].samplingInterval, samplingInterval);
 
-        //test type
-        TEST_ASSERT_EQUAL_INT8(state.collections[2].type, metadata[6]);
 
         //test body is updated
         TEST_ASSERT_EQUAL_INT8(READY, state.bodies[0]);
@@ -324,22 +344,20 @@ void test_set_collection_3(){
 void test_set_collection_4(){
      MRPP_STATE state={
             .nCollections=3,
-            .lastSubId=3,
+            .lastSubId=5,
             .collections={
-                {
-                    .id=1, 
+                { 
                     .startIndex=0, 
-                    .length=60+7,
+                    .length=66,
                     .type=T_INT16,
                     .samplingInterval=300,
                     .beginsInBody=0,
                     .endsInBody=1,
                     .status=DONE
                 },
-                {
-                    .id=2, 
-                    .startIndex=60+7, 
-                    .length=10+7,
+                { 
+                    .startIndex=66, 
+                    .length=16,
                     .type=T_INT16,
                     .samplingInterval=40,
                     .beginsInBody=1,
@@ -347,9 +365,8 @@ void test_set_collection_4(){
                     .status=WAITING 
                 },
                     {
-                    .id=3, 
-                    .startIndex=84, 
-                    .length=70+7,
+                    .startIndex=82, 
+                    .length=76,
                     .type=T_INT16,
                     .samplingInterval=600,
                     .beginsInBody=1,
@@ -367,16 +384,16 @@ void test_set_collection_4(){
 
         mrpp_state_set_collection(&state, collectionId, timestamp, metadata);
         
-        //test ts
         TEST_ASSERT_EQUAL_INT8(DONE, state.collections[1].status);
+        
+        //test ts
         TEST_ASSERT_EQUAL_HEX8_ARRAY(timestamp, metadata, 4);
         
         //test sampling interval
         uint16_t samplingInterval=(uint16_t)metadata[4]<<8 | (uint16_t)metadata[5];
         TEST_ASSERT_EQUAL_INT16(state.collections[1].samplingInterval, samplingInterval);
 
-        //test type
-        TEST_ASSERT_EQUAL_INT8(state.collections[1].type, metadata[6]);
+        
 
         //test body is updated
         TEST_ASSERT_EQUAL_INT8(READY, state.bodies[0]);
@@ -494,8 +511,9 @@ int main(void){
     RUN_TEST(test_init_1);
     RUN_TEST(test_init_2);
     RUN_TEST(test_init_3);
-    RUN_TEST(test_get_header);
-    RUN_TEST(test_get_tail);
+    RUN_TEST(test_get_header_1);
+    RUN_TEST(test_get_header_2);
+    RUN_TEST(test_get_tail_1);
     RUN_TEST(test_set_collection_1);
     RUN_TEST(test_set_collection_2);
     RUN_TEST(test_set_collection_3);

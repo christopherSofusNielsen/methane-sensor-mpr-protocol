@@ -77,6 +77,26 @@ uint8_t mrpp_state_get_header(MRPP_STATE *state, uint8_t package[]){
     return 6+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
 }
 
+uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]){
+    package[0]=state->lastSubId;
+    package[1]=state->lastSubId;
+
+    //status bit
+    package[2]=0;
+
+    //add data type
+    add_data_types(state, package);
+
+    for (uint8_t i = 0; i < state->nCollections; i++)
+    {
+        package[i*4+6]=state->collections[i].startIndex >> 8;
+        package[i*4+7]=state->collections[i].startIndex;
+        package[i*4+8]=state->collections[i].length>>8;
+        package[i*4+9]=state->collections[i].length;
+    }
+    return 6+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
+}
+
 static void add_data_types(MRPP_STATE *state, uint8_t package[]){
     uint32_t dt=0x00000000;
     uint8_t cnt=0;
@@ -108,21 +128,9 @@ static void add_data_types(MRPP_STATE *state, uint8_t package[]){
     package[5]=dt & 0xff;
 } 
 
-uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]){
-    package[0]=state->lastSubId;
-    package[1]=state->lastSubId;
 
-    for (uint8_t i = 0; i < state->nCollections; i++)
-    {
-        package[i*4+2]=state->collections[i].startIndex >> 8;
-        package[i*4+3]=state->collections[i].startIndex;
-        package[i*4+4]=state->collections[i].length>>8;
-        package[i*4+5]=state->collections[i].length;
-    }
-    return 2+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
-}
 
-void mrpp_state_set_collection(MRPP_STATE *state, uint8_t collectionId, uint8_t timestamp[4], uint8_t metadata[7]){
+void mrpp_state_set_collection(MRPP_STATE *state, uint8_t collectionId, uint8_t timestamp[4], uint8_t metadata[6]){
     state->collections[collectionId-1].status=DONE;
 
     //Copy ts
@@ -135,8 +143,6 @@ void mrpp_state_set_collection(MRPP_STATE *state, uint8_t collectionId, uint8_t 
     metadata[4]=state->collections[collectionId-1].samplingInterval>>8;
     metadata[5]=state->collections[collectionId-1].samplingInterval;
 
-    //add type
-    metadata[6]=state->collections[collectionId-1].type;
 
     //Update bodies
     update_bodies(state, collectionId);
