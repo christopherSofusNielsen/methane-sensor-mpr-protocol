@@ -11,6 +11,7 @@
         "${workspaceFolder}\\src\\MRPP\\*.c",
         "${workspaceFolder}\\src\\MRPP\\util\\*.c",
         "${workspaceFolder}\\test\\MRPP\\__test_mrpp.c",
+        "${workspaceFolder}\\test\\helpers\\*.c",
         "${workspaceFolder}\\Unity\\src\\*.c",
         "-o",
         "${workspaceFolder}\\bin\\test_MRPP.exe"
@@ -94,6 +95,7 @@
         "${workspaceFolder}\\src\\MRPP\\*.c",
         "${workspaceFolder}\\src\\MRPP\\util\\*.c",
         "${workspaceFolder}\\test\\MRPP\\util\\__test_data.c",
+        "${workspaceFolder}\\test\\helpers\\*.c",
         "${workspaceFolder}\\Unity\\src\\*.c",
         "-o",
         "${workspaceFolder}\\bin\\test_UTIL-data.exe"
