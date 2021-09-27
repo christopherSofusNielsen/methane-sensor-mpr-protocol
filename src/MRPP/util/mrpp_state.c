@@ -215,22 +215,22 @@ bool mrpp_state_is_body_ready(MRPP_STATE *state){
     return isReady;
 }
 
-void mrpp_state_get_body_address(MRPP_STATE *state, uint16_t *begin, uint8_t*length){
+bool mrpp_state_get_ready_body(MRPP_STATE *state, uint8_t *subId, uint8_t *lastSubId, uint16_t *begin, uint8_t*length){
     
-    if(!mrpp_state_is_body_ready(state)){
-        *begin=0;
-        *length=0;
-        return;
-    }
+    if(!mrpp_state_is_body_ready(state)) return false;
 
     uint8_t readyIndex;
     for (uint8_t i = 0; i < state->nBodies; i++)
     {
         if(state->bodies[i]==READY){
             readyIndex=i;
+            state->bodies[i]=SENT;
             break;
         }
     }
+
+    *subId=readyIndex+1;
+    *lastSubId=state->lastSubId;
 
     *begin=readyIndex*DR_BODY_PAYLOAD_SIZE;
     if(readyIndex<state->nBodies-1){

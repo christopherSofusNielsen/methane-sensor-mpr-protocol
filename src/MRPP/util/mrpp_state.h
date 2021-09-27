@@ -64,6 +64,6 @@ uint8_t mrpp_state_get_header(MRPP_STATE *state, uint8_t package[]);
 uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]);
 void mrpp_state_set_collection(MRPP_STATE *state, uint8_t collectionId, uint8_t timestamp[4], uint8_t metadata[6]);
 bool mrpp_state_is_body_ready(MRPP_STATE *state);
-void mrpp_state_get_body_address(MRPP_STATE *state, uint16_t *begin, uint8_t*length);
+bool mrpp_state_get_ready_body(MRPP_STATE *state, uint8_t *subId, uint8_t *lastSubId, uint16_t *begin, uint8_t*length);
 void mrpp_state_get_collection_address(MRPP_STATE *state, uint8_t collectionId, uint16_t *begin, uint16_t*length);
 #endif

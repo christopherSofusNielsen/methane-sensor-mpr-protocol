@@ -418,58 +418,113 @@ void test_is_body_ready(){
 
 }
 
-void test_get_body_address_1(){
-    MRPP_STATE state={
-        .nCollections=2,
-        .collections={
-            {
-                .startIndex=0,
-                .length=80
+void test_get_body_info_1(){
+     MRPP_STATE state={
+            .nCollections=3,
+            .lastSubId=5,
+            .collections={
+                { 
+                    .startIndex=0, 
+                    .length=66,
+                    .type=T_INT16,
+                    .samplingInterval=300,
+                    .beginsInBody=0,
+                    .endsInBody=1,
+                    .status=DONE
+                },
+                { 
+                    .startIndex=66, 
+                    .length=16,
+                    .type=T_INT16,
+                    .samplingInterval=40,
+                    .beginsInBody=1,
+                    .endsInBody=1,
+                    .status=WAITING 
+                },
+                    {
+                    .startIndex=82, 
+                    .length=76,
+                    .type=T_INT16,
+                    .samplingInterval=600,
+                    .beginsInBody=1,
+                    .endsInBody=3,
+                    .status=WAITING 
+                }
             },
-            {
-                .startIndex=80,
-                .length=40
-            }
-        },
-        .nBodies=3,
-        .bodies={SENT, READY, WAITING}
-    };
+            .nBodies=4,
+            .bodies={READY, WAITING, WAITING, WAITING}
+        };
 
+    uint8_t subId;
+    uint8_t lastSubId;
     uint16_t begin;
     uint8_t len;
 
-    mrpp_state_get_body_address(&state, &begin, &len);
+    mrpp_state_get_ready_body(&state, &subId, &lastSubId, &begin, &len);
 
-    TEST_ASSERT_EQUAL_INT16(48, begin);
+    TEST_ASSERT_EQUAL_INT8(1, subId);
+    TEST_ASSERT_EQUAL_INT8(5, lastSubId);
+    TEST_ASSERT_EQUAL_INT16(0, begin);
     TEST_ASSERT_EQUAL_INT8(48, len);
 
+    //Make sure bodies is updated
+    TEST_ASSERT_EQUAL_INT8(SENT, state.bodies[0]);
 }
 
-void test_get_body_address_2(){
-    MRPP_STATE state={
-        .nCollections=2,
-        .collections={
-            {
-                .startIndex=0,
-                .length=80
+void test_get_body_info_2(){
+     MRPP_STATE state={
+            .nCollections=3,
+            .lastSubId=5,
+            .collections={
+                { 
+                    .startIndex=0, 
+                    .length=66,
+                    .type=T_INT16,
+                    .samplingInterval=300,
+                    .beginsInBody=0,
+                    .endsInBody=1,
+                    .status=DONE
+                },
+                { 
+                    .startIndex=66, 
+                    .length=16,
+                    .type=T_INT16,
+                    .samplingInterval=40,
+                    .beginsInBody=1,
+                    .endsInBody=1,
+                    .status=DONE 
+                },
+                    {
+                    .startIndex=82, 
+                    .length=76,
+                    .type=T_INT16,
+                    .samplingInterval=600,
+                    .beginsInBody=1,
+                    .endsInBody=3,
+                    .status=DONE 
+                }
             },
-            {
-                .startIndex=80,
-                .length=40
-            }
-        },
-        .nBodies=3,
-        .bodies={WAITING, WAITING, READY}
-    };
+            .nBodies=4,
+            .bodies={SENT, SENT, SENT, READY}
+        };
 
+    uint8_t subId;
+    uint8_t lastSubId;
     uint16_t begin;
     uint8_t len;
 
-    mrpp_state_get_body_address(&state, &begin, &len);
+    mrpp_state_get_ready_body(&state, &subId, &lastSubId, &begin, &len);
 
-    TEST_ASSERT_EQUAL_INT16(96, begin);
-    TEST_ASSERT_EQUAL_INT8(24, len);
+    TEST_ASSERT_EQUAL_INT8(4, subId);
+    TEST_ASSERT_EQUAL_INT8(5, lastSubId);
+    TEST_ASSERT_EQUAL_INT16(144, begin);
+    TEST_ASSERT_EQUAL_INT8(14, len);
+
+    //Make sure bodies is updated
+    TEST_ASSERT_EQUAL_INT8(SENT, state.bodies[3]);
 }
+
+
 
 void test_get_collection_address_1(){
      MRPP_STATE state={
@@ -519,8 +574,8 @@ int main(void){
     RUN_TEST(test_set_collection_3);
     RUN_TEST(test_set_collection_4);
     RUN_TEST(test_is_body_ready);
-    RUN_TEST(test_get_body_address_1);
-    RUN_TEST(test_get_body_address_2);
+    RUN_TEST(test_get_body_info_1);
+    RUN_TEST(test_get_body_info_2);
     RUN_TEST(test_get_collection_address_1);
     return UNITY_END();
 }
