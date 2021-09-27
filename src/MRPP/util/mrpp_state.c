@@ -1,6 +1,7 @@
 #include "mrpp_state.h"
 
 static void update_bodies(MRPP_STATE *state, uint8_t collectionId);
+static void add_data_types(MRPP_STATE *state, uint8_t package[]);
 
 void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[], uint8_t nCollections){
     state->groupId=groupId;
@@ -59,16 +60,53 @@ uint8_t mrpp_state_get_header(MRPP_STATE *state, uint8_t package[]){
     package[0]=0;
     package[1]=state->lastSubId;
 
+    //status bit
+    package[2]=0;
+
+    //add data type
+    add_data_types(state, package);
+
     for (uint8_t i = 0; i < state->nCollections; i++)
     {
-        package[i*4+2]=state->collections[i].startIndex >> 8;
-        package[i*4+3]=state->collections[i].startIndex;
-        package[i*4+4]=state->collections[i].length>>8;
-        package[i*4+5]=state->collections[i].length;
+        package[i*4+6]=state->collections[i].startIndex >> 8;
+        package[i*4+7]=state->collections[i].startIndex;
+        package[i*4+8]=state->collections[i].length>>8;
+        package[i*4+9]=state->collections[i].length;
     }
     
-    return 2+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
+    return 6+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
 }
+
+static void add_data_types(MRPP_STATE *state, uint8_t package[]){
+    uint32_t dt=0x00000000;
+    uint8_t cnt=0;
+
+    for (uint8_t i = 0; i < state->nCollections; i++)
+    {
+        switch (state->collections[i].type)
+        {
+            case T_INT8:
+                dt |= 1 << cnt;
+                break;
+            
+            case T_INT16:
+                dt |= 2 << cnt;
+                break;
+
+            case T_FLOAT:
+                dt |= 3 << cnt;
+                break;
+            
+            default:
+                break;
+        }
+        cnt+=2;
+    }
+
+    package[3]=(dt>>16) & 0xff;
+    package[4]=(dt>>8) & 0xff;
+    package[5]=dt & 0xff;
+} 
 
 uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]){
     package[0]=state->lastSubId;
