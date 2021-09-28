@@ -569,6 +569,27 @@ void test_get_tail_package_1(){
     TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 15);
 }
 
+void test_all_body_package_sent_1(){
+    MRPP_STATE _state={
+        .nBodies=4,
+        .bodies={SENT, SENT, WAITING, WAITING}
+    };
+    state=_state;
+
+    bool res=MRPP_all_body_package_sent();
+    TEST_ASSERT_FALSE(res);
+}
+
+void test_all_body_package_sent_2(){
+    MRPP_STATE _state={
+        .nBodies=4,
+        .bodies={SENT, SENT, SENT, SENT}
+    };
+    state=_state;
+
+    bool res=MRPP_all_body_package_sent();
+    TEST_ASSERT_TRUE(res);
+}
 
 
 int main(void){
@@ -586,6 +607,8 @@ int main(void){
     RUN_TEST(test_set_body_sent);
     RUN_TEST(test_get_header_package_1);
     RUN_TEST(test_get_tail_package_1);
+    RUN_TEST(test_all_body_package_sent_1);
+    RUN_TEST(test_all_body_package_sent_2);
 
     return UNITY_END();
 }

@@ -80,3 +80,7 @@ void MRPP_get_tail_package(uint8_t package[], uint8_t *package_length){
     *package_length+=1;
 }
 
+bool MRPP_all_body_package_sent(){
+    return mrpp_state_all_bodies_sent(&state);
+}
+
