@@ -430,6 +430,26 @@ void test_is_body_ready_2(){
 
 }
 
+void test_all_bodies_sent_1(){
+     MRPP_STATE state={
+        .nBodies=5,
+        .bodies={SENT, SENT, READY, WAITING, WAITING}
+    };
+
+    bool res=mrpp_state_all_bodies_sent(&state);
+    TEST_ASSERT_FALSE(res);
+}
+
+void test_all_bodies_sent_2(){
+     MRPP_STATE state={
+        .nBodies=5,
+        .bodies={SENT, SENT, SENT, SENT, SENT}
+    };
+
+    bool res=mrpp_state_all_bodies_sent(&state);
+    TEST_ASSERT_TRUE(res);
+}
+
 void test_get_body_info_1(){
      MRPP_STATE state={
             .nCollections=3,
@@ -593,6 +613,8 @@ int main(void){
     RUN_TEST(test_set_collection_4);
     RUN_TEST(test_is_body_ready_1);
     RUN_TEST(test_is_body_ready_2);
+    RUN_TEST(test_all_bodies_sent_1);
+    RUN_TEST(test_all_bodies_sent_2);
     RUN_TEST(test_get_body_info_1);
     RUN_TEST(test_get_body_info_2);
     RUN_TEST(test_set_body_sent);

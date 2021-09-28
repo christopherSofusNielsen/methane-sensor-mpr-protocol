@@ -214,6 +214,19 @@ int16_t mrpp_state_is_body_ready(MRPP_STATE *state){
     return bodyIndex;
 }
 
+bool mrpp_state_all_bodies_sent(MRPP_STATE *state){
+    bool allSent=true;
+
+    for (uint8_t i = 0; i < state->nBodies; i++)
+    {
+        if(state->bodies[i]!= SENT){
+            allSent=false;
+        }
+    }
+    return allSent;
+    
+}
+
 bool mrpp_state_get_ready_body(MRPP_STATE *state, int16_t bodyIndex, uint8_t *subId, uint8_t *lastSubId, uint16_t *begin, uint8_t*length){
     int16_t res=mrpp_state_is_body_ready(state);
     if(res==-1 || res!=bodyIndex ) return false;
