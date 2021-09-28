@@ -202,28 +202,27 @@ static void update_bodies(MRPP_STATE *state, uint8_t collectionId){
     
 }
 
-bool mrpp_state_is_body_ready(MRPP_STATE *state){
-    bool isReady=false;
+int8_t mrpp_state_is_body_ready(MRPP_STATE *state){
+    int8_t bodyIndex=-1;
     for (uint8_t i = 0; i < state->nBodies; i++)
     {
         if(state->bodies[i]==READY){
-            isReady=true;
+            bodyIndex=i;
             break;
         }
     }
-    return isReady;
+    return bodyIndex;
 }
 
-bool mrpp_state_get_ready_body(MRPP_STATE *state, uint8_t *subId, uint8_t *lastSubId, uint16_t *begin, uint8_t*length){
-    
-    if(!mrpp_state_is_body_ready(state)) return false;
+bool mrpp_state_get_ready_body(MRPP_STATE *state,uint8_t bodyIndex, uint8_t *subId, uint8_t *lastSubId, uint16_t *begin, uint8_t*length){
+    int8_t res=mrpp_state_is_body_ready(state);
+    if(res==-1 || res!=bodyIndex ) return false;
 
     uint8_t readyIndex;
     for (uint8_t i = 0; i < state->nBodies; i++)
     {
         if(state->bodies[i]==READY){
             readyIndex=i;
-            state->bodies[i]=SENT;
             break;
         }
     }
@@ -238,6 +237,12 @@ bool mrpp_state_get_ready_body(MRPP_STATE *state, uint8_t *subId, uint8_t *lastS
         *length=(state->collections[state->nCollections-1].startIndex+state->collections[state->nCollections-1].length)%DR_BODY_PAYLOAD_SIZE; 
     } 
     return true; 
+}
+
+void mrpp_state_set_body_sent(MRPP_STATE *state, uint8_t bodyIndex){
+    if(state->nBodies<=bodyIndex) return;
+
+    state->bodies[bodyIndex]=SENT;
 }
 
 

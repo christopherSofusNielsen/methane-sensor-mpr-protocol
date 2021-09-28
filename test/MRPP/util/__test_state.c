@@ -409,12 +409,13 @@ void test_is_body_ready_1(){
         .bodies={WAITING, WAITING, WAITING}
     };
 
-    bool isReady=mrpp_state_is_body_ready(&state);
-    TEST_ASSERT_FALSE(isReady);
+    int8_t res=mrpp_state_is_body_ready(&state);
+    TEST_ASSERT_EQUAL_INT8(-1, res);
+
 
     state.bodies[0]=READY;
-    isReady=mrpp_state_is_body_ready(&state);
-    TEST_ASSERT_TRUE(isReady);
+    res=mrpp_state_is_body_ready(&state);
+    TEST_ASSERT_EQUAL_INT8(0, res);
 
 }
 
@@ -424,8 +425,9 @@ void test_is_body_ready_2(){
         .bodies={READY}
     };
 
-    bool isReady=mrpp_state_is_body_ready(&state);
-    TEST_ASSERT_TRUE(isReady);
+    int8_t res=mrpp_state_is_body_ready(&state);
+    TEST_ASSERT_EQUAL_INT8(0, res);
+
 }
 
 void test_get_body_info_1(){
@@ -470,15 +472,12 @@ void test_get_body_info_1(){
     uint16_t begin;
     uint8_t len;
 
-    mrpp_state_get_ready_body(&state, &subId, &lastSubId, &begin, &len);
+    mrpp_state_get_ready_body(&state, 0, &subId, &lastSubId, &begin, &len);
 
     TEST_ASSERT_EQUAL_INT8(1, subId);
     TEST_ASSERT_EQUAL_INT8(5, lastSubId);
     TEST_ASSERT_EQUAL_INT16(0, begin);
     TEST_ASSERT_EQUAL_INT8(48, len);
-
-    //Make sure bodies is updated
-    TEST_ASSERT_EQUAL_INT8(SENT, state.bodies[0]);
 }
 
 void test_get_body_info_2(){
@@ -523,14 +522,23 @@ void test_get_body_info_2(){
     uint16_t begin;
     uint8_t len;
 
-    mrpp_state_get_ready_body(&state, &subId, &lastSubId, &begin, &len);
+    mrpp_state_get_ready_body(&state, 3, &subId, &lastSubId, &begin, &len);
 
     TEST_ASSERT_EQUAL_INT8(4, subId);
     TEST_ASSERT_EQUAL_INT8(5, lastSubId);
     TEST_ASSERT_EQUAL_INT16(144, begin);
     TEST_ASSERT_EQUAL_INT8(14, len);
 
-    //Make sure bodies is updated
+}
+
+void test_set_body_sent(){
+    MRPP_STATE state={
+        .nBodies=4,
+        .bodies={SENT, SENT, SENT, READY}
+    };
+
+    mrpp_state_set_body_sent(&state, 3);
+
     TEST_ASSERT_EQUAL_INT8(SENT, state.bodies[3]);
 }
 
@@ -587,6 +595,7 @@ int main(void){
     RUN_TEST(test_is_body_ready_2);
     RUN_TEST(test_get_body_info_1);
     RUN_TEST(test_get_body_info_2);
+    RUN_TEST(test_set_body_sent);
     RUN_TEST(test_get_collection_address_1);
     return UNITY_END();
 }

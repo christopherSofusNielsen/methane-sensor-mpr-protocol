@@ -378,6 +378,9 @@ void test_get_ready_body_package_1(){
     //Test res
     TEST_ASSERT_TRUE(res);
 
+    //Test update of state
+    TEST_ASSERT_EQUAL_UINT8(SENT, state.bodies[0]);
+
     //Test length
     TEST_ASSERT_EQUAL_UINT8(29, package_len);
 
@@ -460,6 +463,9 @@ void test_get_ready_body_package_2(){
     //Test res
     TEST_ASSERT_TRUE(res);
 
+     //Test update of state
+    TEST_ASSERT_EQUAL_UINT8(SENT, state.bodies[1]);
+
     //Test length
     //The last one (26+46)%48
     TEST_ASSERT_EQUAL_UINT8(27, package_len);
@@ -477,6 +483,36 @@ void test_get_ready_body_package_2(){
     
     TEST_ASSERT_TRUE(test_array_range(values_test, 16, package, 3, 24));
 }
+
+// void test_get_header_package(){
+//     MRPP_STATE _state={
+//         .collections={
+//             {
+//                 .beginsInBody=0,
+//                 .endsInBody=0,
+//                 .length=26,
+//                 .startIndex=0,
+//                 .type=T_INT16,
+//                 .samplingInterval=300,
+//                 .status=WAITING
+//             },
+//             {
+//                 .beginsInBody=0,
+//                 .endsInBody=1,
+//                 .length=46,
+//                 .startIndex=26,
+//                 .type=T_INT16,
+//                 .samplingInterval=15,
+//                 .status=DONE
+//             },
+//         },
+//         .nCollections=2,
+//         .groupId=1,
+//         .lastSubId=3,
+//         .nBodies=2,
+//         .bodies={WAITING, READY}
+//     };
+// }
 
 int main(void){
     UNITY_BEGIN();

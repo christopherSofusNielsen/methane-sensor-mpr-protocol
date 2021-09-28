@@ -45,9 +45,9 @@ bool MRPP_get_ready_body_package(uint8_t package[], uint8_t *package_length){
     uint16_t begin;
     uint8_t length;
 
-    bool res=mrpp_state_get_ready_body(&state, &subId, &lastSubId, &begin, &length);
+    //bool res=mrpp_state_get_ready_body(&state, &subId, &lastSubId, &begin, &length);
     
-    if(!res) return false;
+    //if(!res) return false;
 
     *package_length=length+DR_BODY_PACKAGE_META_SIZE;
 
@@ -60,4 +60,8 @@ bool MRPP_get_ready_body_package(uint8_t package[], uint8_t *package_length){
     mrpp_data_get(&package[3], begin, length);
 
     return true;
+}
+
+void MRPP_get_header_package(uint8_t package[], uint8_t *package_length){
+    
 }
