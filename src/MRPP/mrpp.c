@@ -35,19 +35,21 @@ void MRPP_add_collection_data_INT16(uint8_t collectionId, uint8_t timestamp[], u
     mrpp_data_add_int16(metadata, values, begin, length);
 }
 
-bool MRPP_is_body_package_ready(){
-    return mrpp_state_is_body_ready(&state);
+bool MRPP_is_body_package_ready(int16_t *bodyIndex){
+    *bodyIndex = mrpp_state_is_body_ready(&state);
+    return *bodyIndex>-1;
+    
 }
 
-bool MRPP_get_ready_body_package(uint8_t package[], uint8_t *package_length){
+bool MRPP_get_ready_body_package(int16_t bodyIndex, uint8_t package[], uint8_t *package_length){
     uint8_t subId;
     uint8_t lastSubId;
     uint16_t begin;
     uint8_t length;
 
-    //bool res=mrpp_state_get_ready_body(&state, &subId, &lastSubId, &begin, &length);
+    bool res=mrpp_state_get_ready_body(&state, bodyIndex, &subId, &lastSubId, &begin, &length);
     
-    //if(!res) return false;
+    if(!res) return false;
 
     *package_length=length+DR_BODY_PACKAGE_META_SIZE;
 
@@ -60,6 +62,10 @@ bool MRPP_get_ready_body_package(uint8_t package[], uint8_t *package_length){
     mrpp_data_get(&package[3], begin, length);
 
     return true;
+}
+
+void MRPP_set_body_sent(int16_t bodyIndex){
+    mrpp_state_set_body_sent(&state, bodyIndex);
 }
 
 void MRPP_get_header_package(uint8_t package[], uint8_t *package_length){

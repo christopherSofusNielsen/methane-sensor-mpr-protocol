@@ -317,9 +317,11 @@ void test_is_body_package_ready_1(){
         .bodies={WAITING, WAITING}
     };
     state=_state;
+    int16_t bodyIndex;
 
-    bool res=MRPP_is_body_package_ready();
+    bool res=MRPP_is_body_package_ready(&bodyIndex);
     TEST_ASSERT_FALSE(res);
+    TEST_ASSERT_EQUAL_INT16(-1, bodyIndex);
 }
 
 void test_is_body_package_ready_2(){
@@ -328,9 +330,11 @@ void test_is_body_package_ready_2(){
         .bodies={SENT, READY}
     };
     state=_state;
+    int16_t bodyIndex;
 
-    bool res=MRPP_is_body_package_ready();
+    bool res=MRPP_is_body_package_ready(&bodyIndex);
     TEST_ASSERT_TRUE(res);
+    TEST_ASSERT_EQUAL_INT16(1, bodyIndex);
 }
 
 void test_get_ready_body_package_1(){
@@ -373,13 +377,10 @@ void test_get_ready_body_package_1(){
     merge_array(storage, si_test, 4, 2);
     merge_array(storage, values_test, 6, 20);
 
-    bool res=MRPP_get_ready_body_package(package, &package_len);
+    bool res=MRPP_get_ready_body_package(0, package,  &package_len);
 
     //Test res
     TEST_ASSERT_TRUE(res);
-
-    //Test update of state
-    TEST_ASSERT_EQUAL_UINT8(SENT, state.bodies[0]);
 
     //Test length
     TEST_ASSERT_EQUAL_UINT8(29, package_len);
@@ -458,13 +459,10 @@ void test_get_ready_body_package_2(){
     merge_array(storage, si_test, 30, 2);
     merge_array(storage, values_test, 32, 40);
 
-    bool res=MRPP_get_ready_body_package(package, &package_len);
+    bool res=MRPP_get_ready_body_package(1, package, &package_len);
 
     //Test res
     TEST_ASSERT_TRUE(res);
-
-     //Test update of state
-    TEST_ASSERT_EQUAL_UINT8(SENT, state.bodies[1]);
 
     //Test length
     //The last one (26+46)%48
@@ -482,6 +480,17 @@ void test_get_ready_body_package_2(){
     //TEST_ASSERT_TRUE(test_array_range(si_test, 0, package, 7, 2));
     
     TEST_ASSERT_TRUE(test_array_range(values_test, 16, package, 3, 24));
+}
+
+void test_set_body_sent(){
+    MRPP_STATE _state={
+        .nBodies=2,
+        .bodies={WAITING, READY}
+    };
+
+    MRPP_set_body_sent(1);
+
+    TEST_ASSERT_EQUAL_INT8(SENT, state.bodies[1]);
 }
 
 // void test_get_header_package(){
@@ -526,5 +535,6 @@ int main(void){
     RUN_TEST(test_is_body_package_ready_2);
     RUN_TEST(test_get_ready_body_package_1);
     RUN_TEST(test_get_ready_body_package_2);
+    RUN_TEST(test_set_body_sent);
     return UNITY_END();
 }

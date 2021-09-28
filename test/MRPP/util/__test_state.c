@@ -415,7 +415,7 @@ void test_is_body_ready_1(){
 
     state.bodies[0]=READY;
     res=mrpp_state_is_body_ready(&state);
-    TEST_ASSERT_EQUAL_INT8(0, res);
+    TEST_ASSERT_EQUAL_INT16(0, res);
 
 }
 
@@ -426,7 +426,7 @@ void test_is_body_ready_2(){
     };
 
     int8_t res=mrpp_state_is_body_ready(&state);
-    TEST_ASSERT_EQUAL_INT8(0, res);
+    TEST_ASSERT_EQUAL_INT16(0, res);
 
 }
 
@@ -539,7 +539,7 @@ void test_set_body_sent(){
 
     mrpp_state_set_body_sent(&state, 3);
 
-    TEST_ASSERT_EQUAL_INT8(SENT, state.bodies[3]);
+    TEST_ASSERT_EQUAL_INT16(SENT, state.bodies[3]);
 }
 
 
