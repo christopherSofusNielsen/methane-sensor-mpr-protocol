@@ -17,5 +17,6 @@ bool MRPP_is_body_package_ready(int16_t *bodyIndex);
 bool MRPP_get_ready_body_package(int16_t bodyIndex, uint8_t package[], uint8_t *package_length);
 void MRPP_set_body_sent(int16_t bodyIndex);
 void MRPP_get_header_package(uint8_t package[], uint8_t *package_length);
+void MRPP_get_tail_package(uint8_t package[], uint8_t *package_length);
 
 #endif

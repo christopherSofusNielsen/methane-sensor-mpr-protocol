@@ -69,5 +69,14 @@ void MRPP_set_body_sent(int16_t bodyIndex){
 }
 
 void MRPP_get_header_package(uint8_t package[], uint8_t *package_length){
-    
+    package[0]=state.groupId;
+    *package_length=mrpp_state_get_header(&state, &package[1]);
+    *package_length+=1;
 }
+
+void MRPP_get_tail_package(uint8_t package[], uint8_t *package_length){
+    package[0]=state.groupId;
+    *package_length=mrpp_state_get_tail(&state, &package[1]);
+    *package_length+=1;
+}
+

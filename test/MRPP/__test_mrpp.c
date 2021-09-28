@@ -493,35 +493,83 @@ void test_set_body_sent(){
     TEST_ASSERT_EQUAL_INT8(SENT, state.bodies[1]);
 }
 
-// void test_get_header_package(){
-//     MRPP_STATE _state={
-//         .collections={
-//             {
-//                 .beginsInBody=0,
-//                 .endsInBody=0,
-//                 .length=26,
-//                 .startIndex=0,
-//                 .type=T_INT16,
-//                 .samplingInterval=300,
-//                 .status=WAITING
-//             },
-//             {
-//                 .beginsInBody=0,
-//                 .endsInBody=1,
-//                 .length=46,
-//                 .startIndex=26,
-//                 .type=T_INT16,
-//                 .samplingInterval=15,
-//                 .status=DONE
-//             },
-//         },
-//         .nCollections=2,
-//         .groupId=1,
-//         .lastSubId=3,
-//         .nBodies=2,
-//         .bodies={WAITING, READY}
-//     };
-// }
+void test_get_header_package_1(){
+    MRPP_STATE _state={
+        .collections={
+            {
+                .length=26,
+                .startIndex=0,
+                .type=T_INT16,
+            },
+            {
+                .length=406,
+                .startIndex=26,
+                .type=T_INT16,
+            },
+        },
+        .nCollections=2,
+        .groupId=1,
+        .lastSubId=10,
+    };
+    state=_state;
+
+    uint8_t test_package[]={
+        0x1,
+        0x0, 0xa, 
+        0x0, 
+        0x0, 0x0, 0xa, 
+        0x0, 0x0, 0x0, 0x1a, 
+        0x0, 0x1a, 0x1, 0x96
+    };
+
+    uint8_t package[51];
+    uint8_t package_len;
+
+    MRPP_get_header_package(package, &package_len);
+
+    TEST_ASSERT_EQUAL_UINT8(15, package_len);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 15);
+}
+
+void test_get_tail_package_1(){
+    MRPP_STATE _state={
+        .collections={
+            {
+                .length=26,
+                .startIndex=0,
+                .type=T_INT16,
+            },
+            {
+                .length=406,
+                .startIndex=26,
+                .type=T_INT16,
+            },
+        },
+        .nCollections=2,
+        .groupId=1,
+        .lastSubId=10,
+    };
+    state=_state;
+
+     uint8_t test_package[]={
+        0x1,
+        0xa, 0xa, 
+        0x0, 
+        0x0, 0x0, 0xa, 
+        0x0, 0x0, 0x0, 0x1a, 
+        0x0, 0x1a, 0x1, 0x96
+    };
+
+    uint8_t package[51];
+    uint8_t package_len;
+
+    MRPP_get_tail_package(package, &package_len);
+
+    TEST_ASSERT_EQUAL_UINT8(15, package_len);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 15);
+}
+
+
 
 int main(void){
     UNITY_BEGIN();
@@ -536,5 +584,8 @@ int main(void){
     RUN_TEST(test_get_ready_body_package_1);
     RUN_TEST(test_get_ready_body_package_2);
     RUN_TEST(test_set_body_sent);
+    RUN_TEST(test_get_header_package_1);
+    RUN_TEST(test_get_tail_package_1);
+
     return UNITY_END();
 }
