@@ -311,7 +311,172 @@ void test_add_collection_data_INT16_2(){
     TEST_ASSERT_TRUE(test_array_range(values_test, 0, storage, 6+26, 40));
 }
 
+void test_is_body_package_ready_1(){
+    MRPP_STATE _state={
+        .nBodies=2,
+        .bodies={WAITING, WAITING}
+    };
+    state=_state;
 
+    bool res=MRPP_is_body_package_ready();
+    TEST_ASSERT_FALSE(res);
+}
+
+void test_is_body_package_ready_2(){
+    MRPP_STATE _state={
+        .nBodies=2,
+        .bodies={SENT, READY}
+    };
+    state=_state;
+
+    bool res=MRPP_is_body_package_ready();
+    TEST_ASSERT_TRUE(res);
+}
+
+void test_get_ready_body_package_1(){
+    MRPP_STATE _state={
+        .collections={
+            {
+                .beginsInBody=0,
+                .endsInBody=0,
+                .length=26,
+                .startIndex=0,
+                .type=T_INT16,
+                .samplingInterval=300,
+                .status=DONE
+            }
+        },
+        .nCollections=1,
+        .groupId=0,
+        .lastSubId=2,
+        .nBodies=1,
+        .bodies={READY}
+    };
+    state=_state;
+    uint8_t package[51];
+    uint8_t package_len;
+    uint8_t ts[]={0x00, 0x01, 0x02, 0x03};
+    uint8_t si_test[]={0x1, 0x2c};
+    uint8_t values_test[]={
+        0xbe, 0xc2, 
+        0x52, 0xe8, 
+        0xde, 0xaf, 
+        0x9c, 0x8c, 
+        0xaf, 0xa6, 
+        0x5b, 0x7c, 
+        0x24, 0xa2, 
+        0x76, 0x34, 
+        0x18, 0xde, 
+        0xc7, 0xe0
+        };
+    merge_array(storage, ts, 0, 4);
+    merge_array(storage, si_test, 4, 2);
+    merge_array(storage, values_test, 6, 20);
+
+    bool res=MRPP_get_ready_body_package(package, &package_len);
+
+    //Test res
+    TEST_ASSERT_TRUE(res);
+
+    //Test length
+    TEST_ASSERT_EQUAL_UINT8(29, package_len);
+
+    //Test group ID
+    TEST_ASSERT_EQUAL_HEX8(0, package[0]);
+
+    //TEST subId
+    TEST_ASSERT_EQUAL_UINT8(1, package[1]);
+    TEST_ASSERT_EQUAL_UINT8(2, package[2]);
+
+    //Test data
+    TEST_ASSERT_TRUE(test_array_range(ts, 0, package, 3, 4));
+    TEST_ASSERT_TRUE(test_array_range(si_test, 0, package, 7, 2));
+    TEST_ASSERT_TRUE(test_array_range(values_test, 0, package, 9, 20));
+}
+
+void test_get_ready_body_package_2(){
+    MRPP_STATE _state={
+        .collections={
+            {
+                .beginsInBody=0,
+                .endsInBody=0,
+                .length=26,
+                .startIndex=0,
+                .type=T_INT16,
+                .samplingInterval=300,
+                .status=WAITING
+            },
+            {
+                .beginsInBody=0,
+                .endsInBody=1,
+                .length=46,
+                .startIndex=26,
+                .type=T_INT16,
+                .samplingInterval=15,
+                .status=DONE
+            },
+        },
+        .nCollections=2,
+        .groupId=1,
+        .lastSubId=3,
+        .nBodies=2,
+        .bodies={WAITING, READY}
+    };
+
+    state=_state;
+    uint8_t package[51];
+    uint8_t package_len;
+    uint8_t ts[]={0x00, 0x01, 0x02, 0x03};
+    uint8_t si_test[]={0x0, 0xF};
+    uint8_t values_test[]={
+        0x93, 0x13, 
+        0x9d, 0x5e, 
+        0x5a, 0x42, 
+        0x7a, 0xf2, 
+        0xbe, 0xb0, 
+        0x25, 0x94, 
+        0x29, 0x51, 
+        0x14, 0xc8, 
+        0xd2, 0x46, 
+        0xd1, 0x52, 
+        0x9c, 0x69, 
+        0xaa, 0x87, 
+        0x99, 0x8b, 
+        0xe8, 0x86, 
+        0xa3, 0xa5, 
+        0x21, 0x5a, 
+        0xbe, 0xf5, 
+        0x48, 0x34, 
+        0xce, 0xce, 
+        0xa8, 0x11
+        };
+  
+    merge_array(storage, ts, 26, 4);
+    merge_array(storage, si_test, 30, 2);
+    merge_array(storage, values_test, 32, 40);
+
+    bool res=MRPP_get_ready_body_package(package, &package_len);
+
+    //Test res
+    TEST_ASSERT_TRUE(res);
+
+    //Test length
+    //The last one (26+46)%48
+    TEST_ASSERT_EQUAL_UINT8(27, package_len);
+
+    //Test group ID
+    TEST_ASSERT_EQUAL_HEX8(1, package[0]);
+
+    //TEST subId
+    TEST_ASSERT_EQUAL_UINT8(2, package[1]);
+    TEST_ASSERT_EQUAL_UINT8(3, package[2]);
+
+    //Test data in the end of body 0, therefore not tested
+    //TEST_ASSERT_TRUE(test_array_range(ts, 0, package, 3, 4));
+    //TEST_ASSERT_TRUE(test_array_range(si_test, 0, package, 7, 2));
+    
+    TEST_ASSERT_TRUE(test_array_range(values_test, 16, package, 3, 24));
+}
 
 int main(void){
     UNITY_BEGIN();
@@ -321,5 +486,9 @@ int main(void){
     RUN_TEST(test_init_group__state_init_real_world);
     RUN_TEST(test_add_collection_data_INT16_1);
     RUN_TEST(test_add_collection_data_INT16_2);
+    RUN_TEST(test_is_body_package_ready_1);
+    RUN_TEST(test_is_body_package_ready_2);
+    RUN_TEST(test_get_ready_body_package_1);
+    RUN_TEST(test_get_ready_body_package_2);
     return UNITY_END();
 }

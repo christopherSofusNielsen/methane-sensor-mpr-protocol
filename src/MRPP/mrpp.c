@@ -1,4 +1,5 @@
 #include "mrpp.h"
+#include <stdio.h>
 
 MRPP_STATE state;
 uint8_t _groupId=0;
@@ -32,4 +33,31 @@ void MRPP_add_collection_data_INT16(uint8_t collectionId, uint8_t timestamp[], u
     mrpp_state_get_collection_address(&state, collectionId, &begin, &length);
 
     mrpp_data_add_int16(metadata, values, begin, length);
+}
+
+bool MRPP_is_body_package_ready(){
+    return mrpp_state_is_body_ready(&state);
+}
+
+bool MRPP_get_ready_body_package(uint8_t package[], uint8_t *package_length){
+    uint8_t subId;
+    uint8_t lastSubId;
+    uint16_t begin;
+    uint8_t length;
+
+    bool res=mrpp_state_get_ready_body(&state, &subId, &lastSubId, &begin, &length);
+    
+    if(!res) return false;
+
+    *package_length=length+DR_BODY_PACKAGE_META_SIZE;
+
+    //set meta
+    package[0]=state.groupId;
+    package[1]=subId;
+    package[2]=lastSubId;
+
+    //Merge data
+    mrpp_data_get(&package[3], begin, length);
+
+    return true;
 }

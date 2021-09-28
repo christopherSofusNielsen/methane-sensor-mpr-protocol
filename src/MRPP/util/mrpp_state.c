@@ -236,7 +236,8 @@ bool mrpp_state_get_ready_body(MRPP_STATE *state, uint8_t *subId, uint8_t *lastS
         *length=DR_BODY_PAYLOAD_SIZE;
     }else{
         *length=(state->collections[state->nCollections-1].startIndex+state->collections[state->nCollections-1].length)%DR_BODY_PAYLOAD_SIZE; 
-    }  
+    } 
+    return true; 
 }
 
 
