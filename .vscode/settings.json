@@ -2,7 +2,9 @@
   "files.associations": {
     "mrpp.h": "c",
     "mrpp_data.h": "c",
-    "mrpp_state.h": "c"
+    "mrpp_state.h": "c",
+    "params.h": "c",
+    "stdint.h": "c"
   },
   "C_Cpp.errorSquiggles": "Disabled"
 }

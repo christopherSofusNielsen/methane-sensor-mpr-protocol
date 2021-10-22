@@ -1,6 +1,5 @@
 #include "mrpp_state.h"
 
-
 static void update_bodies(MRPP_STATE *state, uint8_t collectionId);
 static void add_data_types(MRPP_STATE *state, uint8_t package[]);
 

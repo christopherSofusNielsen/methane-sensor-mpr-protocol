@@ -4,14 +4,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "../types.h"
 #include "../params.h"
-#include "../mrpp.h"
 
-typedef enum {
-    T_INT8=1,
-    T_INT16=2,
-    T_FLOAT=4
-} MEASURE_TYPE;
 
 typedef enum {
     WAITING,
@@ -19,7 +14,6 @@ typedef enum {
     SENT,
     DONE,
 } DR_STATUS;
-
 
 
 typedef struct __COLLECTION_STATE
