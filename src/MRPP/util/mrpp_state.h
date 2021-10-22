@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "../params.h"
+#include "../mrpp.h"
 
 typedef enum {
     T_INT8=1,
@@ -19,12 +20,7 @@ typedef enum {
     DONE,
 } DR_STATUS;
 
-typedef struct COLLECTION
-{
-    uint16_t samplings;
-    uint16_t samplingInterval;
-    MEASURE_TYPE type;
-} COLLECTION;
+
 
 typedef struct __COLLECTION_STATE
 {

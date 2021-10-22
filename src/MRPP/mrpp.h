@@ -11,6 +11,13 @@ extern MRPP_STATE state;
 extern uint8_t _groupId;
 #endif
 
+typedef struct COLLECTION
+{
+    uint16_t samplings;
+    uint16_t samplingInterval;
+    MEASURE_TYPE type;
+} COLLECTION;
+
 void MRPP_init_group(COLLECTION collections[], uint8_t nCollections);
 void MRPP_add_collection_data_INT16(uint8_t collectionId, uint8_t timestamp[], uint16_t values[]);
 bool MRPP_is_body_package_ready(int16_t *bodyIndex);
