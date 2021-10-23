@@ -84,3 +84,14 @@ bool MRPP_all_body_package_sent(){
     return mrpp_state_all_bodies_sent(&state);
 }
 
+bool MRPP_validate_collections_space(COLLECTION collections[], uint8_t nCollections){
+    uint16_t size=0;
+    for (uint8_t i = 0; i < nCollections; i++)
+    {
+        size+=collections[i].samplings*collections[i].type+COLLECTION_DATA_META_SIZE;
+    }
+    
+    if(size<=BODY_BUFFER_DATA_SIZE) return true;
+    return false;
+}
+

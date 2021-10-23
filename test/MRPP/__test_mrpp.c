@@ -1,6 +1,7 @@
 #include "../../Unity/src/unity.h"
 #include "../../src/MRPP/mrpp.h"
 #include "../../src/MRPP/util/mrpp_state.h"
+#include "../../src/MRPP/types.h"
 #include "../helpers/helpers.h"
 
 //MRPP_STATE _state;
@@ -591,6 +592,26 @@ void test_all_body_package_sent_2(){
     TEST_ASSERT_TRUE(res);
 }
 
+void test_validate_collections_space_1(){
+    COLLECTION collections[]={
+        {.samplingInterval=30, .samplings=200, .type=T_INT16},
+        {.samplingInterval=30, .samplings=388, .type=T_INT8},
+    };
+
+    bool res=MRPP_validate_collections_space(collections, 2);
+    TEST_ASSERT_TRUE(res);
+}
+
+void test_validate_collections_space_2(){
+    COLLECTION collections[]={
+        {.samplingInterval=30, .samplings=200, .type=T_INT16},
+        {.samplingInterval=30, .samplings=389, .type=T_INT8},
+    };
+
+    bool res=MRPP_validate_collections_space(collections, 2);
+    TEST_ASSERT_FALSE(res);
+}
+
 
 int main(void){
     UNITY_BEGIN();
@@ -609,6 +630,8 @@ int main(void){
     RUN_TEST(test_get_tail_package_1);
     RUN_TEST(test_all_body_package_sent_1);
     RUN_TEST(test_all_body_package_sent_2);
+    RUN_TEST(test_validate_collections_space_1);
+    RUN_TEST(test_validate_collections_space_2);
 
     return UNITY_END();
 }

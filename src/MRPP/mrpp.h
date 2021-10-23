@@ -22,5 +22,7 @@ void MRPP_set_body_sent(int16_t bodyIndex);
 void MRPP_get_header_package(uint8_t package[], uint8_t *package_length);
 void MRPP_get_tail_package(uint8_t package[], uint8_t *package_length);
 bool MRPP_all_body_package_sent();
+bool MRPP_validate_collections_space(COLLECTION collections[], uint8_t nCollections);
+
 
 #endif
