@@ -33,23 +33,37 @@ int main(int argc, char const *argv[])
 
     MRPP_get_ready_body_package(bodyIndex, package, &package_length);
 
+    //Create
+    FILE *fp;
+    fp=fopen("output/t0.txt", "w");
+    
+    
     char str[300]={'\0'};
+
 
     //header
     MRPP_get_header_package(package, &package_length);
     util_2_hex_str(str, package, package_length);
     printf("%s\n", str);
+    fputs(str, fp);
+    fputs("\n", fp);
+
 
     //body
     MRPP_get_ready_body_package(bodyIndex, package, &package_length);
     util_2_hex_str(str, package, package_length);
     printf("%s\n", str);
+    fputs(str, fp);
+    fputs("\n", fp);
 
     //tail
     MRPP_get_tail_package(package, &package_length);
     util_2_hex_str(str, package, package_length);
     printf("%s\n", str);
+    fputs(str, fp);
+    fputs("\n", fp);
 
+    fclose(fp);
 
     return 0;
 }
