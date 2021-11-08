@@ -197,6 +197,43 @@
         "showReuseMessage": true,
         "clear": true
       }
-    }
+    },
+    {
+      "type": "shell",
+      "label": "Build Integration T1",
+      "command": "C:\\MinGW\\bin\\gcc.exe",
+      "args": [
+        "-g",
+        "${workspaceFolder}\\src\\MRPP\\*.c",
+        "${workspaceFolder}\\src\\MRPP\\util\\*.c",
+        "${workspaceFolder}\\integration-test\\t1.c",
+        "${workspaceFolder}\\integration-test\\util\\*.c",
+        "-o",
+        "${workspaceFolder}\\bin\\int_test_t1.exe"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": "build",
+      "detail": "compiler: C:\\MinGW\\bin\\gcc.exe"
+    },
+    {
+      "type": "shell",
+      "label": "Run Integration test T1",
+      "detail": "Run int_test_t1.exe",
+      "command": "${workspaceFolder}/bin/int_test_t1.exe",
+      "args": [],
+      "group": "test",
+      "dependsOn": ["Build Integration T1"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      }
+    },
   ]
 }
