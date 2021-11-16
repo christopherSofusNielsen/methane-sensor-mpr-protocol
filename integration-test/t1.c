@@ -14,7 +14,7 @@ COLLECTION collections[]={
     {.samplingInterval=2, .samplings=2, .type=T_INT16},
 };
 
-uint8_t fake_ts[]={0xAA, 0xBB, 0xCC, 0xDD};
+uint8_t fake_ts[]={0xFF, 0xFF, 0xFF, 0xFF};
 
 
 int main(int argc, char const *argv[])
