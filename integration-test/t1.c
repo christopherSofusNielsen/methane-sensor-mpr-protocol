@@ -20,7 +20,7 @@ uint8_t fake_ts[]={0xFF, 0xFF, 0xFF, 0xFF};
 int main(int argc, char const *argv[])
 {
 
-    MRPP_init_group(collections, 5);
+    MRPP_init_group(collections, 5, 0);
     uint16_t data[30];
     
     //Add data for collection 1

@@ -16,7 +16,7 @@ uint8_t fake_ts[]={0xAA, 0xBB, 0xCC, 0xDD};
 int main(int argc, char const *argv[])
 {
 
-    MRPP_init_group(collections, 1);
+    MRPP_init_group(collections, 1, 0);
     uint16_t data[10];
     util_fill_data(data, 0xABCD, 10 );
 

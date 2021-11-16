@@ -6,9 +6,7 @@
 
 //MRPP_STATE _state;
 
-void setUp(){
-    _groupId=0;
-}
+void setUp(){}
 
 void tearDown(){}
 
@@ -18,10 +16,10 @@ void test_init_group__group_id_count(){
         {.samplingInterval=500, .samplings=10, .type=T_INT16},
     };
 
-    MRPP_init_group(collections, 2);
-    TEST_ASSERT_EQUAL_UINT8(1, _groupId);
-    MRPP_init_group(collections, 2);
-    TEST_ASSERT_EQUAL_UINT8(2, _groupId);
+    uint8_t groupId=MRPP_init_group(collections, 2, 1);
+    TEST_ASSERT_EQUAL_UINT8(1, groupId);
+    groupId=MRPP_init_group(collections, 2, 2);
+    TEST_ASSERT_EQUAL_UINT8(2, groupId);
 }
 
 void test_init_group__state_init_1(){
@@ -30,7 +28,7 @@ void test_init_group__state_init_1(){
         {.samplingInterval=120, .samplings=10, .type=T_INT16},
     };
     
-    MRPP_init_group(collections, 2);
+    MRPP_init_group(collections, 2, 0);
 
     TEST_ASSERT_EQUAL_UINT8(0, state.groupId);
     TEST_ASSERT_EQUAL_UINT8(3, state.lastSubId);
@@ -64,7 +62,7 @@ void test_init_group__state_init_2(){
         {.samplingInterval=30, .samplings=42, .type=T_INT8},
     };
     
-    MRPP_init_group(collections, 1);
+    MRPP_init_group(collections, 1, 0);
 
     TEST_ASSERT_EQUAL_UINT8(0, state.groupId);
     TEST_ASSERT_EQUAL_UINT8(2, state.lastSubId);
@@ -95,7 +93,7 @@ void test_init_group__state_init_real_world(){
         {.samplingInterval=60, .samplings=5, .type=T_INT16},
     };
     
-    MRPP_init_group(collections, 7);
+    MRPP_init_group(collections, 7, 0);
 
     TEST_ASSERT_EQUAL_UINT8(0, state.groupId);
     TEST_ASSERT_EQUAL_UINT8(15, state.lastSubId);
