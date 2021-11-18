@@ -23,9 +23,9 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
 
         //calculate starting and ending body
         state->collections[i].beginsInBody=startingIndex/DR_BODY_PAYLOAD_SIZE;
-        uint8_t endsInBody=(startingIndex+len)/DR_BODY_PAYLOAD_SIZE;
+        uint8_t endsInBody=(startingIndex+len-1)/DR_BODY_PAYLOAD_SIZE;
         //handling edge cases where data matches exact size of bodies fx 48, 96 and so on
-        endsInBody=(startingIndex+len)%DR_BODY_PAYLOAD_SIZE==0?endsInBody-1:endsInBody;
+        //endsInBody=(startingIndex+len)%DR_BODY_PAYLOAD_SIZE==0?endsInBody-1:endsInBody;
         state->collections[i].endsInBody=endsInBody;
         
 
@@ -37,15 +37,15 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
     }
 
     //Calculate lastSubId
-    uint8_t lastSubId=startingIndex/DR_BODY_PAYLOAD_SIZE+DR_SUBID_OVERHEAD;
+    uint8_t lastSubId=(startingIndex-1)/DR_BODY_PAYLOAD_SIZE+DR_SUBID_OVERHEAD;
     //handling edge cases where data matches exact size of bodies fx 48, 96 and so on
-    lastSubId=startingIndex%DR_BODY_PAYLOAD_SIZE==0?lastSubId-1:lastSubId;
+    //lastSubId=startingIndex%DR_BODY_PAYLOAD_SIZE==0?lastSubId-1:lastSubId;
     state->lastSubId=lastSubId;
     
     //calculate bodies
-    uint8_t nBodies=startingIndex/DR_BODY_PAYLOAD_SIZE;
+    uint8_t nBodies=(startingIndex-1)/DR_BODY_PAYLOAD_SIZE+1;
     //handling edge cases where data matches exact size of bodies fx 48, 96 and so on
-    nBodies=startingIndex%DR_BODY_PAYLOAD_SIZE==0?nBodies:nBodies+1;
+    //nBodies=startingIndex%DR_BODY_PAYLOAD_SIZE==0?nBodies:nBodies+1;
     state->nBodies=nBodies;
 
     for (uint8_t i = 0; i < nBodies; i++)
