@@ -100,6 +100,41 @@ void test_init_3(){
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[1].status);
 }
 
+void test_init_4(){
+    MRPP_STATE state;
+    COLLECTION cols[2]={
+        {.samplings=21, .type=T_INT16, .samplingInterval=2},
+        {.samplings=21, .type=T_INT16, .samplingInterval=2}
+    };
+    mrpp_state_init(&state, 1, cols, 2);
+
+    TEST_ASSERT_EQUAL_UINT8(1, state.groupId);
+    TEST_ASSERT_EQUAL_UINT8(3, state.lastSubId);
+    TEST_ASSERT_EQUAL_UINT8(2, state.nBodies);
+    TEST_ASSERT_EQUAL_UINT8(2, state.nCollections);
+
+    //Test bodies
+    TEST_ASSERT_EACH_EQUAL_UINT8(WAITING, state.bodies, 2);
+   
+    //Test collections
+    TEST_ASSERT_EQUAL_UINT16(0, state.collections[0].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(48, state.collections[0].length);
+    TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[0].type);
+    TEST_ASSERT_EQUAL_UINT16(2, state.collections[0].samplingInterval);
+    TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
+
+    TEST_ASSERT_EQUAL_UINT16(48, state.collections[1].startIndex);
+    TEST_ASSERT_EQUAL_UINT16(48, state.collections[1].length);
+    TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[1].type);
+    TEST_ASSERT_EQUAL_UINT16(2, state.collections[1].samplingInterval);
+    TEST_ASSERT_EQUAL_UINT8(1, state.collections[1].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(1, state.collections[1].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[1].status);
+}
+
+
 void test_get_header_1(){
     uint8_t test_package[]={
         0x0, 0x3, 
@@ -551,6 +586,48 @@ void test_get_body_info_2(){
 
 }
 
+void test_get_body_info_3(){
+     MRPP_STATE state={
+            .nCollections=2,
+            .lastSubId=3,
+            .collections={
+                { 
+                    .startIndex=0, 
+                    .length=48,
+                    .type=T_INT16,
+                    .samplingInterval=2,
+                    .beginsInBody=0,
+                    .endsInBody=0,
+                    .status=WAITING
+                },
+                { 
+                    .startIndex=48, 
+                    .length=48,
+                    .type=T_INT16,
+                    .samplingInterval=2,
+                    .beginsInBody=1,
+                    .endsInBody=1,
+                    .status=DONE 
+                },
+            },
+            .nBodies=2,
+            .bodies={WAITING, READY}
+        };
+
+    uint8_t subId;
+    uint8_t lastSubId;
+    uint16_t begin;
+    uint8_t len;
+
+    mrpp_state_get_ready_body(&state, 1, &subId, &lastSubId, &begin, &len);
+
+    TEST_ASSERT_EQUAL_INT8(2, subId);
+    TEST_ASSERT_EQUAL_INT8(3, lastSubId);
+    TEST_ASSERT_EQUAL_INT16(48, begin);
+    TEST_ASSERT_EQUAL_INT8(48, len);
+
+}
+
 void test_set_body_sent(){
     MRPP_STATE state={
         .nBodies=4,
@@ -604,6 +681,7 @@ int main(void){
     RUN_TEST(test_init_1);
     RUN_TEST(test_init_2);
     RUN_TEST(test_init_3);
+    RUN_TEST(test_init_4);
     RUN_TEST(test_get_header_1);
     RUN_TEST(test_get_header_2);
     RUN_TEST(test_get_tail_1);
@@ -617,6 +695,7 @@ int main(void){
     RUN_TEST(test_all_bodies_sent_2);
     RUN_TEST(test_get_body_info_1);
     RUN_TEST(test_get_body_info_2);
+    RUN_TEST(test_get_body_info_3);
     RUN_TEST(test_set_body_sent);
     RUN_TEST(test_get_collection_address_1);
     return UNITY_END();
