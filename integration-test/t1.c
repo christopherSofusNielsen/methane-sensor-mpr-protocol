@@ -7,41 +7,53 @@
 
 
 COLLECTION collections[]={
-    {.samplingInterval=2, .samplings=2, .type=T_INT16},
-    {.samplingInterval=2, .samplings=2, .type=T_INT16},
-    {.samplingInterval=2, .samplings=2, .type=T_INT16},
-    {.samplingInterval=2, .samplings=2, .type=T_INT16},
-    {.samplingInterval=2, .samplings=2, .type=T_INT16},
+    {.samplingInterval=2, .samplings=60, .type=T_INT16},
+    {.samplingInterval=2, .samplings=10, .type=T_INT16},
+    {.samplingInterval=2, .samplings=10, .type=T_INT16},
+    {.samplingInterval=2, .samplings=30, .type=T_INT16},
+    {.samplingInterval=2, .samplings=30, .type=T_INT16},
+    {.samplingInterval=2, .samplings=150, .type=T_INT16},
+    {.samplingInterval=2, .samplings=5, .type=T_INT16},
 };
 
 uint8_t fake_ts[]={0xFF, 0xFF, 0xFF, 0xFF};
-
+uint16_t data[200];
 
 int main(int argc, char const *argv[])
 {
 
-    MRPP_init_group(collections, 5, 0);
-    uint16_t data[30];
+    MRPP_init_group(collections, 7, 0);
+    
     
     //Add data for collection 1
-    util_fill_data(data, 0xAAAA, 2 );
+    util_fill_data(data, 0xAAAA, 60 );
     MRPP_add_collection_data_INT16(1, fake_ts, data);
 
     //Add data for collection 2
-    util_fill_data(data, 0xBBBB, 2 );
+    util_fill_data(data, 0xBBBB, 10 );
     MRPP_add_collection_data_INT16(2, fake_ts, data);
 
     //Add data for collection 3
-    util_fill_data(data, 0xCCCC, 2 );
+    util_fill_data(data, 0xCCCC, 10 );
     MRPP_add_collection_data_INT16(3, fake_ts, data);
 
     //Add data for collection 4
-    util_fill_data(data, 0xDDDD, 2 );
+    util_fill_data(data, 0xDDDD, 30 );
     MRPP_add_collection_data_INT16(4, fake_ts, data);
 
     //Add data for collection 5
-    util_fill_data(data, 0xEEEE, 2 );
+    util_fill_data(data, 0xEEEE, 30 );
     MRPP_add_collection_data_INT16(5, fake_ts, data);
+
+    //Add data for collection 6
+    util_fill_data(data, 0xFFFF, 150 );
+    MRPP_add_collection_data_INT16(6, fake_ts, data);
+
+    //Add data for collection 7
+    util_fill_data(data, 0x9999, 5 );
+    MRPP_add_collection_data_INT16(7, fake_ts, data);
+
+
 
 
     //Setup variables to use
