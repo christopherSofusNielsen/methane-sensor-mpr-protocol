@@ -29,5 +29,6 @@
 #define COLLECTION_DATA_META_SIZE 6
 //Add to number of ids in bodies 1 for header and 1 for tail
 #define DR_SUBID_OVERHEAD 2
+#define HEADER_TAIL_META_SIZE 11
 
 #endif

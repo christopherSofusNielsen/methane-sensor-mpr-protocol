@@ -70,6 +70,11 @@ bool MRPP_all_body_package_sent(){
 }
 
 bool MRPP_validate_collections_space(COLLECTION collections[], uint8_t nCollections){
+    //Check number of collections
+    uint8_t headerSize=HEADER_TAIL_META_SIZE+nCollections*DR_HEADER_COLLECTION_META_SIZE;
+    if(headerSize>MAX_PAYLOAD_SIZE) return false;
+
+    //Check buffer size
     uint16_t size=0;
     for (uint8_t i = 0; i < nCollections; i++)
     {
