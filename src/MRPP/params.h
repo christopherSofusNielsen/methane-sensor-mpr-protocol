@@ -27,6 +27,7 @@
 #define DR_HEADER_COLLECTION_META_SIZE 4
 #define DR_BODY_PACKAGE_META_SIZE 3
 #define COLLECTION_DATA_META_SIZE 6
-
+//Add to number of ids in bodies 1 for header and 1 for tail
+#define DR_SUBID_OVERHEAD 2
 
 #endif

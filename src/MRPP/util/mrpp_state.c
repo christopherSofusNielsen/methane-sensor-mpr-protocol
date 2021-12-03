@@ -1,5 +1,6 @@
 #include "mrpp_state.h"
 
+
 static void update_bodies(MRPP_STATE *state, uint8_t collectionId);
 static void add_data_types(MRPP_STATE *state, uint8_t package[]);
 
@@ -26,9 +27,6 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
         uint8_t endsInBody=(startingIndex+len-1)/DR_BODY_PAYLOAD_SIZE;
 
         //Simpler solution above
-        //handling edge cases where data matches exact size of bodies fx 48, 96 and so on
-        //uint8_t endsInBody=(startingIndex+len)/DR_BODY_PAYLOAD_SIZE;
-        //endsInBody=(startingIndex+len)%DR_BODY_PAYLOAD_SIZE==0?endsInBody-1:endsInBody;
         state->collections[i].endsInBody=endsInBody;
         
 
@@ -42,17 +40,10 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
     //Calculate lastSubId
     
     uint8_t lastSubId=(startingIndex-1)/DR_BODY_PAYLOAD_SIZE+DR_SUBID_OVERHEAD;
-    //handling edge cases where data matches exact size of bodies fx 48, 96 and so on
-    //uint8_t lastSubId=(startingIndex)/DR_BODY_PAYLOAD_SIZE+DR_SUBID_OVERHEAD;
-    //lastSubId=startingIndex%DR_BODY_PAYLOAD_SIZE==0?lastSubId-1:lastSubId;
     state->lastSubId=lastSubId;
     
     //calculate bodies
-    
     uint8_t nBodies=(startingIndex-1)/DR_BODY_PAYLOAD_SIZE+1;
-    //handling edge cases where data matches exact size of bodies fx 48, 96 and so on
-    // uint8_t nBodies=(startingIndex)/DR_BODY_PAYLOAD_SIZE;
-    // nBodies=startingIndex%DR_BODY_PAYLOAD_SIZE==0?nBodies:nBodies+1;
     state->nBodies=nBodies;
 
     for (uint8_t i = 0; i < nBodies; i++)
@@ -69,18 +60,21 @@ uint8_t mrpp_state_get_header(MRPP_STATE *state, uint8_t package[]){
     //status bit
     package[2]=0;
 
+    //N collections
+    package[3]=state->nCollections;
+
     //add data type
-    add_data_types(state, package);
+    add_data_types(state, &package[4]);
 
     for (uint8_t i = 0; i < state->nCollections; i++)
     {
-        package[i*4+6]=state->collections[i].startIndex >> 8;
-        package[i*4+7]=state->collections[i].startIndex;
-        package[i*4+8]=state->collections[i].length>>8;
-        package[i*4+9]=state->collections[i].length;
+        package[i*4+10]=state->collections[i].startIndex >> 8;
+        package[i*4+11]=state->collections[i].startIndex;
+        package[i*4+12]=state->collections[i].length>>8;
+        package[i*4+13]=state->collections[i].length;
     }
     
-    return 6+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
+    return 10+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
 }
 
 uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]){
@@ -90,50 +84,58 @@ uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]){
     //status bit
     package[2]=0;
 
+    //N collections
+    package[3]=state->nCollections;
+
     //add data type
-    add_data_types(state, package);
+    add_data_types(state, &package[4]);
 
     for (uint8_t i = 0; i < state->nCollections; i++)
     {
-        package[i*4+6]=state->collections[i].startIndex >> 8;
-        package[i*4+7]=state->collections[i].startIndex;
-        package[i*4+8]=state->collections[i].length>>8;
-        package[i*4+9]=state->collections[i].length;
+        package[i*4+10]=state->collections[i].startIndex >> 8;
+        package[i*4+11]=state->collections[i].startIndex;
+        package[i*4+12]=state->collections[i].length>>8;
+        package[i*4+13]=state->collections[i].length;
     }
-    return 6+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
+    return 10+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
 }
 
-static void add_data_types(MRPP_STATE *state, uint8_t package[]){
-    uint32_t dt=0x00000000;
-    uint8_t cnt=0;
-
-    for (uint8_t i = 0; i < state->nCollections; i++)
+static void add_data_types(MRPP_STATE *state, uint8_t dt[]){
+    for (uint8_t bIndex = 0; bIndex < 6; bIndex++)
     {
-        switch (state->collections[i].type)
+        uint8_t bitArray=0x00;
+        for (uint8_t index = 0; index < 4; index++)
         {
-            case T_INT8:
-                dt |= 1 << cnt;
-                break;
-            
-            case T_INT16:
-                dt |= 2 << cnt;
-                break;
+            //If there is no more collection just skip and use default 0x00
+            uint8_t nCol=bIndex*4+index;
+            if(nCol+1>state->nCollections) break;
 
-            case T_FLOAT:
-                dt |= 3 << cnt;
-                break;
-            
-            default:
-                break;
+            uint8_t shifts=index*2;
+            switch (state->collections[nCol].type)
+            {
+                case T_INT8:
+                    bitArray |=1 << shifts;
+                    break;
+                
+                case T_INT16:
+                    bitArray |= 2 << shifts;
+                    break;
+
+                case T_FLOAT:
+                    bitArray |= 3 << shifts;
+                    break;
+                
+                default:
+                    break;
+            }
+
         }
-        cnt+=2;
+        //set from the end
+        dt[5-bIndex]=bitArray;
+        
     }
-
-    package[3]=(dt>>16) & 0xff;
-    package[4]=(dt>>8) & 0xff;
-    package[5]=dt & 0xff;
+    
 } 
-
 
 
 void mrpp_state_set_collection(MRPP_STATE *state, uint8_t collectionId, uint8_t timestamp[4], uint8_t metadata[6]){
@@ -182,7 +184,7 @@ static void update_bodies(MRPP_STATE *state, uint8_t collectionId){
     uint8_t endsInBody=state->collections[collectionId-1].endsInBody;
     for (uint8_t i = collectionId; i < state->nCollections; i++)
     {
-         if(i==collectionId-1) continue;
+        if(i==collectionId-1) continue;
 
         if(state->collections[i].beginsInBody==endsInBody){
             if(state->collections[i].status!=DONE){
@@ -254,8 +256,6 @@ bool mrpp_state_get_ready_body(MRPP_STATE *state, int16_t bodyIndex, uint8_t *su
     if(readyIndex<state->nBodies-1){
         *length=DR_BODY_PAYLOAD_SIZE;
     }else{
-        //Does not work for edge cases
-        //*length=(state->collections[state->nCollections-1].startIndex+state->collections[state->nCollections-1].length)%DR_BODY_PAYLOAD_SIZE; 
         *length=(state->collections[state->nCollections-1].startIndex+state->collections[state->nCollections-1].length)-(state->nBodies-1)*DR_BODY_PAYLOAD_SIZE; 
     } 
     return true; 
