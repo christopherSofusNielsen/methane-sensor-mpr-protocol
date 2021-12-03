@@ -18,6 +18,7 @@
  * Maximum payload size
  */
 #define MAX_PAYLOAD_SIZE 100
+//#define MAX_PAYLOAD_SIZE 51
 
 
 /**
