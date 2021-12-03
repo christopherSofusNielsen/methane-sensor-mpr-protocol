@@ -31,12 +31,12 @@ void test_init_group__state_init_1(){
     MRPP_init_group(collections, 2, 0);
 
     TEST_ASSERT_EQUAL_UINT8(0, state.groupId);
-    TEST_ASSERT_EQUAL_UINT8(3, state.lastSubId);
+    TEST_ASSERT_EQUAL_UINT8(2, state.lastSubId);
     TEST_ASSERT_EQUAL_UINT8(2, state.nCollections);
-    TEST_ASSERT_EQUAL_UINT8(2, state.nBodies);
+    TEST_ASSERT_EQUAL_UINT8(1, state.nBodies);
 
     //Test bodies
-    TEST_ASSERT_EACH_EQUAL_UINT8(WAITING, state.bodies, 2);
+    TEST_ASSERT_EACH_EQUAL_UINT8(WAITING, state.bodies, 1);
 
     //Test collections
     TEST_ASSERT_EQUAL_UINT16(0, state.collections[0].startIndex);
@@ -44,22 +44,22 @@ void test_init_group__state_init_1(){
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[0].type);
     TEST_ASSERT_EQUAL_UINT16(30, state.collections[0].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
-    TEST_ASSERT_EQUAL_UINT8(1, state.collections[0].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].endsInBody);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
 
     TEST_ASSERT_EQUAL_UINT16(66, state.collections[1].startIndex);
     TEST_ASSERT_EQUAL_UINT16(26, state.collections[1].length);
     TEST_ASSERT_EQUAL_UINT8(T_INT16, state.collections[1].type);
     TEST_ASSERT_EQUAL_UINT16(120, state.collections[1].samplingInterval);
-    TEST_ASSERT_EQUAL_UINT8(1, state.collections[1].beginsInBody);
-    TEST_ASSERT_EQUAL_UINT8(1, state.collections[1].endsInBody);
-    TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[1].status);
+    TEST_ASSERT_EQUAL_UINT8(0, state.collections[1].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(0, state.collections[1].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
 
 }
 
 void test_init_group__state_init_2(){
     COLLECTION collections[]={
-        {.samplingInterval=30, .samplings=42, .type=T_INT8},
+        {.samplingInterval=30, .samplings=91, .type=T_INT8},
     };
     
     MRPP_init_group(collections, 1, 0);
@@ -74,7 +74,7 @@ void test_init_group__state_init_2(){
 
     //Test collections
     TEST_ASSERT_EQUAL_UINT16(0, state.collections[0].startIndex);
-    TEST_ASSERT_EQUAL_UINT16(48, state.collections[0].length);
+    TEST_ASSERT_EQUAL_UINT16(97, state.collections[0].length);
     TEST_ASSERT_EQUAL_UINT8(T_INT8, state.collections[0].type);
     TEST_ASSERT_EQUAL_UINT16(30, state.collections[0].samplingInterval);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
@@ -96,16 +96,16 @@ void test_init_group__state_init_real_world(){
     MRPP_init_group(collections, 7, 0);
 
     TEST_ASSERT_EQUAL_UINT8(0, state.groupId);
-    TEST_ASSERT_EQUAL_UINT8(15, state.lastSubId);
+    TEST_ASSERT_EQUAL_UINT8(8, state.lastSubId);
     TEST_ASSERT_EQUAL_UINT8(7, state.nCollections);
-    TEST_ASSERT_EQUAL_UINT8(14, state.nBodies);
+    TEST_ASSERT_EQUAL_UINT8(7, state.nBodies);
 
     //Test bodies
-    TEST_ASSERT_EACH_EQUAL_UINT8(WAITING, state.bodies, 14);
+    TEST_ASSERT_EACH_EQUAL_UINT8(WAITING, state.bodies, 17);
 
     //Test collections 0
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
-    TEST_ASSERT_EQUAL_UINT8(2, state.collections[0].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(1, state.collections[0].endsInBody);
     TEST_ASSERT_EQUAL_UINT16(126, state.collections[0].length);
     TEST_ASSERT_EQUAL_UINT16(0, state.collections[0].startIndex);
     TEST_ASSERT_EQUAL_UINT16(60, state.collections[0].samplingInterval);
@@ -113,8 +113,8 @@ void test_init_group__state_init_real_world(){
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
 
     //Test collections 1
-    TEST_ASSERT_EQUAL_UINT8(2, state.collections[1].beginsInBody);
-    TEST_ASSERT_EQUAL_UINT8(3, state.collections[1].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(1, state.collections[1].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(1, state.collections[1].endsInBody);
     TEST_ASSERT_EQUAL_UINT16(26, state.collections[1].length);
     TEST_ASSERT_EQUAL_UINT16(126, state.collections[1].startIndex);
     TEST_ASSERT_EQUAL_UINT16(60, state.collections[1].samplingInterval);
@@ -122,8 +122,8 @@ void test_init_group__state_init_real_world(){
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[1].status);
 
     //Test collections 2
-    TEST_ASSERT_EQUAL_UINT8(3, state.collections[2].beginsInBody);
-    TEST_ASSERT_EQUAL_UINT8(3, state.collections[2].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(1, state.collections[2].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(1, state.collections[2].endsInBody);
     TEST_ASSERT_EQUAL_UINT16(26, state.collections[2].length);
     TEST_ASSERT_EQUAL_UINT16(152, state.collections[2].startIndex);
     TEST_ASSERT_EQUAL_UINT16(60, state.collections[2].samplingInterval);
@@ -131,8 +131,8 @@ void test_init_group__state_init_real_world(){
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[2].status);
 
     //Test collections 3
-    TEST_ASSERT_EQUAL_UINT8(3, state.collections[3].beginsInBody);
-    TEST_ASSERT_EQUAL_UINT8(5, state.collections[3].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(1, state.collections[3].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(2, state.collections[3].endsInBody);
     TEST_ASSERT_EQUAL_UINT16(66, state.collections[3].length);
     TEST_ASSERT_EQUAL_UINT16(178, state.collections[3].startIndex);
     TEST_ASSERT_EQUAL_UINT16(10, state.collections[3].samplingInterval);
@@ -140,8 +140,8 @@ void test_init_group__state_init_real_world(){
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[3].status);
 
     //Test collections 4
-    TEST_ASSERT_EQUAL_UINT8(5, state.collections[4].beginsInBody);
-    TEST_ASSERT_EQUAL_UINT8(6, state.collections[4].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(2, state.collections[4].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(3, state.collections[4].endsInBody);
     TEST_ASSERT_EQUAL_UINT16(66, state.collections[4].length);
     TEST_ASSERT_EQUAL_UINT16(244, state.collections[4].startIndex);
     TEST_ASSERT_EQUAL_UINT16(10, state.collections[4].samplingInterval);
@@ -149,8 +149,8 @@ void test_init_group__state_init_real_world(){
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[4].status);
 
     //Test collections 5
-    TEST_ASSERT_EQUAL_UINT8(6, state.collections[5].beginsInBody);
-    TEST_ASSERT_EQUAL_UINT8(12, state.collections[5].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(3, state.collections[5].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(6, state.collections[5].endsInBody);
     TEST_ASSERT_EQUAL_UINT16(306, state.collections[5].length);
     TEST_ASSERT_EQUAL_UINT16(310, state.collections[5].startIndex);
     TEST_ASSERT_EQUAL_UINT16(2, state.collections[5].samplingInterval);
@@ -158,8 +158,8 @@ void test_init_group__state_init_real_world(){
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[5].status);
 
     //Test collections 6
-    TEST_ASSERT_EQUAL_UINT8(12, state.collections[6].beginsInBody);
-    TEST_ASSERT_EQUAL_UINT8(13, state.collections[6].endsInBody);
+    TEST_ASSERT_EQUAL_UINT8(6, state.collections[6].beginsInBody);
+    TEST_ASSERT_EQUAL_UINT8(6, state.collections[6].endsInBody);
     TEST_ASSERT_EQUAL_UINT16(16, state.collections[6].length);
     TEST_ASSERT_EQUAL_UINT16(616, state.collections[6].startIndex);
     TEST_ASSERT_EQUAL_UINT16(60, state.collections[6].samplingInterval);
@@ -403,9 +403,9 @@ void test_get_ready_body_package_2(){
             {
                 .beginsInBody=0,
                 .endsInBody=0,
-                .length=26,
+                .length=97,
                 .startIndex=0,
-                .type=T_INT16,
+                .type=T_INT8,
                 .samplingInterval=300,
                 .status=WAITING
             },
@@ -413,7 +413,7 @@ void test_get_ready_body_package_2(){
                 .beginsInBody=0,
                 .endsInBody=1,
                 .length=46,
-                .startIndex=26,
+                .startIndex=97,
                 .type=T_INT16,
                 .samplingInterval=15,
                 .status=DONE
@@ -427,7 +427,7 @@ void test_get_ready_body_package_2(){
     };
 
     state=_state;
-    uint8_t package[51];
+    uint8_t package[100];
     uint8_t package_len;
     uint8_t ts[]={0x00, 0x01, 0x02, 0x03};
     uint8_t si_test[]={0x0, 0xF};
@@ -454,9 +454,9 @@ void test_get_ready_body_package_2(){
         0xa8, 0x11
         };
   
-    merge_array(storage, ts, 26, 4);
-    merge_array(storage, si_test, 30, 2);
-    merge_array(storage, values_test, 32, 40);
+    merge_array(storage, ts, 97, 4);
+    merge_array(storage, si_test, 101, 2);
+    merge_array(storage, values_test, 103, 40);
 
     bool res=MRPP_get_ready_body_package(1, package, &package_len);
 
@@ -465,7 +465,7 @@ void test_get_ready_body_package_2(){
 
     //Test length
     //The last one (26+46)%48
-    TEST_ASSERT_EQUAL_UINT8(27, package_len);
+    TEST_ASSERT_EQUAL_UINT8(49, package_len);
 
     //Test group ID
     TEST_ASSERT_EQUAL_HEX8(1, package[0]);
@@ -475,10 +475,10 @@ void test_get_ready_body_package_2(){
     TEST_ASSERT_EQUAL_UINT8(3, package[2]);
 
     //Test data in the end of body 0, therefore not tested
-    //TEST_ASSERT_TRUE(test_array_range(ts, 0, package, 3, 4));
-    //TEST_ASSERT_TRUE(test_array_range(si_test, 0, package, 7, 2));
+    TEST_ASSERT_TRUE(test_array_range(ts, 0, package, 3, 4));
+    TEST_ASSERT_TRUE(test_array_range(si_test, 0, package, 7, 2));
     
-    TEST_ASSERT_TRUE(test_array_range(values_test, 16, package, 3, 24));
+    TEST_ASSERT_TRUE(test_array_range(values_test, 0, package, 9, 40));
 }
 
 void test_set_body_sent(){
@@ -508,26 +508,27 @@ void test_get_header_package_1(){
         },
         .nCollections=2,
         .groupId=1,
-        .lastSubId=10,
+        .lastSubId=6,
     };
     state=_state;
 
     uint8_t test_package[]={
-        0x1,
-        0x0, 0xa, 
-        0x0, 
-        0x0, 0x0, 0xa, 
+        0x1,                    //GroupID
+        0x0, 0x6,               //subId and lastSubId
+        0x0,                    //Status bit
+        0x2,                    //Collections
+        0x0, 0x0, 0x00, 0x00, 0x00,0xa, //Data types 
         0x0, 0x0, 0x0, 0x1a, 
         0x0, 0x1a, 0x1, 0x96
     };
 
-    uint8_t package[51];
+    uint8_t package[100];
     uint8_t package_len;
 
     MRPP_get_header_package(package, &package_len);
 
-    TEST_ASSERT_EQUAL_UINT8(15, package_len);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 15);
+    TEST_ASSERT_EQUAL_UINT8(19, package_len);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 19);
 }
 
 void test_get_tail_package_1(){
@@ -553,8 +554,9 @@ void test_get_tail_package_1(){
      uint8_t test_package[]={
         0x1,
         0xa, 0xa, 
-        0x0, 
-        0x0, 0x0, 0xa, 
+        0x0,
+        0x2, 
+        0x0, 0x0, 0x00, 0x00, 0x00, 0xa, 
         0x0, 0x0, 0x0, 0x1a, 
         0x0, 0x1a, 0x1, 0x96
     };
@@ -564,8 +566,8 @@ void test_get_tail_package_1(){
 
     MRPP_get_tail_package(package, &package_len);
 
-    TEST_ASSERT_EQUAL_UINT8(15, package_len);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 15);
+    TEST_ASSERT_EQUAL_UINT8(19, package_len);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 19);
 }
 
 void test_all_body_package_sent_1(){
