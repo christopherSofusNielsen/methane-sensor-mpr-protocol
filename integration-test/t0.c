@@ -11,7 +11,7 @@ COLLECTION collections[]={
 };
 
 uint8_t fake_ts[]={0xAA, 0xBB, 0xCC, 0xDD};
-
+char str[400]={'\0'};
 
 int main(int argc, char const *argv[])
 {
@@ -31,15 +31,10 @@ int main(int argc, char const *argv[])
     uint8_t package[51];
     uint8_t package_length;
 
-    MRPP_get_ready_body_package(bodyIndex, package, &package_length);
-
     //Create
     FILE *fp;
     fp=fopen("output/t0.txt", "w");
     
-    
-    char str[300]={'\0'};
-
 
     //header
     MRPP_get_header_package(package, &package_length);

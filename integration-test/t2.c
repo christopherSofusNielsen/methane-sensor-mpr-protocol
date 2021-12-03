@@ -12,7 +12,7 @@ COLLECTION collections[]={
 };
 
 uint8_t fake_ts[]={0xFF, 0xFF, 0xFF, 0xFF};
-
+char str[500]={'\0'};
 
 int main(int argc, char const *argv[])
 {
@@ -29,9 +29,9 @@ int main(int argc, char const *argv[])
     MRPP_add_collection_data_INT16(2, fake_ts, data);
 
     //Setup variables to use
-    char str[300]={'\0'};
+    
     int16_t bodyIndex;
-    uint8_t package[51];
+    uint8_t package[100];
     uint8_t package_length;
     FILE *fp;
     fp=fopen("output/t2.txt", "w");

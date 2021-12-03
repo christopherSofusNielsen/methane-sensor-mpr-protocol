@@ -30,7 +30,7 @@ int main(int argc, char const *argv[])
 
 
     //Setup variables to use
-    char str[300]={'\0'};
+    char str[400]={'\0'};
     int16_t bodyIndex;
     uint8_t package[51];
     uint8_t package_length;
