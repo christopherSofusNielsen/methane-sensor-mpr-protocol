@@ -104,65 +104,92 @@ void test_init_2(){
  * Test that header is created  correct
  * 
  */
+
 void test_get_header_1(){
     uint8_t test_package[]={
-        0x0, 0x2, //id & last id 
-        0x0, //status bit
-        0x2, //N col
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x0A, //Data types 
-        0x0, 0x0, 0x0, 0x1a, 
-        0x0, 0x1a, 0x0, 0x1a
+        0x00, 0x02,     //subId & lastSubId
+        0x00,           //Status bit
+        2,              //N col
+        10,             //ID=1 samples
+        20              //ID=2 samples
     };
     MRPP_STATE state={
         .nCollections=2,
         .lastSubId=2,
         .collections={
-            {.startIndex=0, .length=26, .type=T_INT16}, //samples=10
-            {.startIndex=26, .length=26, .type=T_INT16} //samples=10
+            {.type=T_INT16, .nSamples=10},
+            {.type=T_INT16, .nSamples=20} //samples=10
         }
     };
+
     uint8_t package[100];
     uint8_t length=mrpp_state_get_header(&state, package);
 
-    TEST_ASSERT_EQUAL_INT8(18, length);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 18);
+    TEST_ASSERT_EQUAL_INT8(6, length);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 6);
 }
 
-void test_get_header_2(){
-    uint8_t test_package[]={
-        0x0, 0x3, //id & last id 
-        0x0, //status bit
-        0x8, //N col
-        0x00, 0x00, 0x00, 0x00, 0x55, 0xAA, //Data types 
-        0x0, 0x0, 0x0, 0x1a, 
-        0x0, 0x1a, 0x0, 0x1a,
-        0x0, 0x34, 0x0, 0x1a,
-        0x0, 0x4E, 0x0, 0x1a,
-        0x0, 0x68, 0x0, 0x1a,
-        0x0, 0x82, 0x0, 0x1a,
-        0x0, 0x9C, 0x0, 0x1a,
-        0x0, 0xB6, 0x0, 0x1a,
-    };
-    MRPP_STATE state={
-        .nCollections=8,
-        .lastSubId=3,
-        .collections={
-            {.startIndex=0, .length=26, .type=T_INT16}, //samples=10
-            {.startIndex=26, .length=26, .type=T_INT16}, //samples=10
-            {.startIndex=52, .length=26, .type=T_INT16}, //samples=10
-            {.startIndex=78, .length=26, .type=T_INT16}, //samples=10
-            {.startIndex=104, .length=26, .type=T_INT8}, //samples=20
-            {.startIndex=130, .length=26, .type=T_INT8}, //samples=20
-            {.startIndex=156, .length=26, .type=T_INT8}, //samples=20
-            {.startIndex=182, .length=26, .type=T_INT8} //samples=20
-        }
-    };
-    uint8_t package[100];
-    uint8_t length=mrpp_state_get_header(&state, package);
+//Version v2
+// void test_get_header_1(){
+//     uint8_t test_package[]={
+//         0x0, 0x2, //id & last id 
+//         0x0, //status bit
+//         0x2, //N col
+//         0x00, 0x00, 0x00, 0x00, 0x00, 0x0A, //Data types 
+//         0x0, 0x0, 0x0, 0x1a, 
+//         0x0, 0x1a, 0x0, 0x1a
+//     };
+//     MRPP_STATE state={
+//         .nCollections=2,
+//         .lastSubId=2,
+//         .collections={
+//             {.startIndex=0, .length=26, .type=T_INT16}, //samples=10
+//             {.startIndex=26, .length=26, .type=T_INT16} //samples=10
+//         }
+//     };
+//     uint8_t package[100];
+//     uint8_t length=mrpp_state_get_header(&state, package);
 
-    TEST_ASSERT_EQUAL_INT8(42, length);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 42);
-}
+//     TEST_ASSERT_EQUAL_INT8(18, length);
+//     TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 18);
+// }
+
+//Version v1
+// void test_get_header_2(){
+//     uint8_t test_package[]={
+//         0x0, 0x3, //id & last id 
+//         0x0, //status bit
+//         0x8, //N col
+//         0x00, 0x00, 0x00, 0x00, 0x55, 0xAA, //Data types 
+//         0x0, 0x0, 0x0, 0x1a, 
+//         0x0, 0x1a, 0x0, 0x1a,
+//         0x0, 0x34, 0x0, 0x1a,
+//         0x0, 0x4E, 0x0, 0x1a,
+//         0x0, 0x68, 0x0, 0x1a,
+//         0x0, 0x82, 0x0, 0x1a,
+//         0x0, 0x9C, 0x0, 0x1a,
+//         0x0, 0xB6, 0x0, 0x1a,
+//     };
+//     MRPP_STATE state={
+//         .nCollections=8,
+//         .lastSubId=3,
+//         .collections={
+//             {.startIndex=0, .length=26, .type=T_INT16}, //samples=10
+//             {.startIndex=26, .length=26, .type=T_INT16}, //samples=10
+//             {.startIndex=52, .length=26, .type=T_INT16}, //samples=10
+//             {.startIndex=78, .length=26, .type=T_INT16}, //samples=10
+//             {.startIndex=104, .length=26, .type=T_INT8}, //samples=20
+//             {.startIndex=130, .length=26, .type=T_INT8}, //samples=20
+//             {.startIndex=156, .length=26, .type=T_INT8}, //samples=20
+//             {.startIndex=182, .length=26, .type=T_INT8} //samples=20
+//         }
+//     };
+//     uint8_t package[100];
+//     uint8_t length=mrpp_state_get_header(&state, package);
+
+//     TEST_ASSERT_EQUAL_INT8(42, length);
+//     TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 42);
+// }
 
 
 void test_set_collection_1(){
@@ -443,7 +470,7 @@ int main(void){
     RUN_TEST(test_init_1);
     RUN_TEST(test_init_2);
     RUN_TEST(test_get_header_1);
-    RUN_TEST(test_get_header_2);
+    //RUN_TEST(test_get_header_2);
     RUN_TEST(test_set_collection_1);
     RUN_TEST(test_set_collection_2);
     RUN_TEST(test_set_collection_3);
