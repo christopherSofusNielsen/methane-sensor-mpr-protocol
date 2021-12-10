@@ -44,6 +44,7 @@ void test_init_1(){
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].endsInBody);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
+    TEST_ASSERT_EQUAL_UINT8(10, state.collections[0].nSamples);
 
     TEST_ASSERT_EQUAL_UINT16(26, state.collections[1].startIndex);
     TEST_ASSERT_EQUAL_UINT16(46, state.collections[1].length);
@@ -52,6 +53,8 @@ void test_init_1(){
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[1].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[1].endsInBody);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[1].status);
+    TEST_ASSERT_EQUAL_UINT8(20, state.collections[1].nSamples);
+
 }
 /**
  * Test limits
@@ -81,6 +84,8 @@ void test_init_2(){
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(0, state.collections[0].endsInBody);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[0].status);
+    TEST_ASSERT_EQUAL_UINT8(91, state.collections[0].nSamples);
+
 
 
     //Test collection 2
@@ -91,6 +96,8 @@ void test_init_2(){
     TEST_ASSERT_EQUAL_UINT8(1, state.collections[1].beginsInBody);
     TEST_ASSERT_EQUAL_UINT8(1, state.collections[1].endsInBody);
     TEST_ASSERT_EQUAL_UINT8(WAITING, state.collections[1].status);
+    TEST_ASSERT_EQUAL_UINT8(91, state.collections[1].nSamples);
+
 }
 
 /**

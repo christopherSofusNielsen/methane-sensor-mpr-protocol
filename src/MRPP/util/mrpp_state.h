@@ -20,6 +20,7 @@ typedef struct __COLLECTION_STATE
 {
     uint16_t startIndex;
     uint16_t length;
+    uint8_t nSamples;
     MEASURE_TYPE type;
     uint16_t samplingInterval;
     uint8_t beginsInBody;

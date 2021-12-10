@@ -16,6 +16,9 @@ void mrpp_state_init(MRPP_STATE *state, uint8_t groupId, COLLECTION collections[
         //type
         state->collections[i].type=collections[i].type;
 
+        //Samples
+        state->collections[i].nSamples=collections[i].samplings;
+
         //Calculate length and set starting index
         state->collections[i].startIndex=startingIndex;
         uint16_t len=collections[i].samplings*collections[i].type+COLLECTION_DATA_META_SIZE;
