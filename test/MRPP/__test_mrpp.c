@@ -498,11 +498,13 @@ void test_get_header_package_1(){
             {
                 .length=26,
                 .startIndex=0,
+                .nSamples=10,
                 .type=T_INT16,
             },
             {
                 .length=406,
                 .startIndex=26,
+                .nSamples=200,
                 .type=T_INT16,
             },
         },
@@ -517,9 +519,9 @@ void test_get_header_package_1(){
         0x0, 0x6,               //subId and lastSubId
         0x0,                    //Status bit
         0x2,                    //Collections
-        0x0, 0x0, 0x00, 0x00, 0x00,0xa, //Data types 
-        0x0, 0x0, 0x0, 0x1a, 
-        0x0, 0x1a, 0x1, 0x96
+        0x0A,                   //Data types 
+        10,
+        200
     };
 
     uint8_t package[100];
@@ -527,8 +529,8 @@ void test_get_header_package_1(){
 
     MRPP_get_header_package(package, &package_len);
 
-    TEST_ASSERT_EQUAL_UINT8(19, package_len);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 19);
+    TEST_ASSERT_EQUAL_UINT8(8, package_len);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 8);
 }
 
 void test_get_tail_package_1(){
@@ -537,28 +539,51 @@ void test_get_tail_package_1(){
             {
                 .length=26,
                 .startIndex=0,
+                .nSamples=10,
                 .type=T_INT16,
             },
             {
-                .length=406,
+                .length=26,
                 .startIndex=26,
+                .nSamples=10,
+                .type=T_INT16,
+            },
+             {
+                .length=26,
+                .startIndex=52,
+                .nSamples=10,
+                .type=T_INT16,
+            },
+             {
+                .length=26,
+                .startIndex=78,
+                .nSamples=10,
+                .type=T_INT16,
+            },
+             {
+                .length=26,
+                .startIndex=104,
+                .nSamples=10,
                 .type=T_INT16,
             },
         },
-        .nCollections=2,
+        .nCollections=5,
         .groupId=1,
-        .lastSubId=10,
+        .lastSubId=3,
     };
     state=_state;
 
      uint8_t test_package[]={
-        0x1,
-        0xa, 0xa, 
-        0x0,
-        0x2, 
-        0x0, 0x0, 0x00, 0x00, 0x00, 0xa, 
-        0x0, 0x0, 0x0, 0x1a, 
-        0x0, 0x1a, 0x1, 0x96
+        0x1,                    //GroupID
+        0x3, 0x3,               //subId and lastSubId
+        0x0,                    //Status bit
+        0x5,                    //Collections
+        0x02, 0xAA,                   //Data types 
+        10,
+        10,
+        10,
+        10,
+        10,
     };
 
     uint8_t package[51];
@@ -566,8 +591,8 @@ void test_get_tail_package_1(){
 
     MRPP_get_tail_package(package, &package_len);
 
-    TEST_ASSERT_EQUAL_UINT8(19, package_len);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 19);
+    TEST_ASSERT_EQUAL_UINT8(12, package_len);
+    TEST_ASSERT_EQUAL_HEX8_ARRAY(test_package, package, 12);
 }
 
 void test_all_body_package_sent_1(){
