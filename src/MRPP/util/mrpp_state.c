@@ -2,7 +2,6 @@
 
 
 static void update_bodies(MRPP_STATE *state, uint8_t collectionId);
-static void add_data_types(MRPP_STATE *state, uint8_t package[]);
 static void add_dynamic_data_types(MRPP_STATE *state, uint8_t package[]);
 static uint8_t dynamic_data_type_length(uint8_t nCollections);
 static uint8_t generator_header_tail(MRPP_STATE *state, uint8_t package[], uint8_t subId);
@@ -63,26 +62,7 @@ uint8_t mrpp_state_get_header(MRPP_STATE *state, uint8_t package[]){
 }
 
 uint8_t mrpp_state_get_tail(MRPP_STATE *state, uint8_t package[]){
-    package[0]=state->lastSubId;
-    package[1]=state->lastSubId;
-
-    //status bit
-    package[2]=0;
-
-    //N collections
-    package[3]=state->nCollections;
-
-    //add data type
-    add_data_types(state, &package[4]);
-
-    for (uint8_t i = 0; i < state->nCollections; i++)
-    {
-        package[i*4+10]=state->collections[i].startIndex >> 8;
-        package[i*4+11]=state->collections[i].startIndex;
-        package[i*4+12]=state->collections[i].length>>8;
-        package[i*4+13]=state->collections[i].length;
-    }
-    return 10+state->nCollections*DR_HEADER_COLLECTION_META_SIZE;
+    return generator_header_tail(state, package, state->lastSubId);
 }
 
 static uint8_t generator_header_tail(MRPP_STATE *state, uint8_t package[], uint8_t subId){
@@ -100,7 +80,7 @@ static uint8_t generator_header_tail(MRPP_STATE *state, uint8_t package[], uint8
 
     //Calculate collection offset
     uint8_t offset=dynamic_data_type_length(state->nCollections);
-    offset+=3; //subId+lastSubId+statusBit
+    offset+=4; //subId+lastSubId+statusBit
 
     for (uint8_t i = 0; i < state->nCollections; i++)
     {
@@ -147,44 +127,7 @@ static void add_dynamic_data_types(MRPP_STATE *state, uint8_t dt[]){
 
         }
         //set from the end
-        dt[dataTypesLen-bIndex]=bitArray;
-        
-    }
-    
-} 
-
-static void add_data_types(MRPP_STATE *state, uint8_t dt[]){
-    for (uint8_t bIndex = 0; bIndex < 6; bIndex++)
-    {
-        uint8_t bitArray=0x00;
-        for (uint8_t index = 0; index < 4; index++)
-        {
-            //If there is no more collection just skip and use default 0x00
-            uint8_t nCol=bIndex*4+index;
-            if(nCol+1>state->nCollections) break;
-
-            uint8_t shifts=index*2;
-            switch (state->collections[nCol].type)
-            {
-                case T_INT8:
-                    bitArray |=1 << shifts;
-                    break;
-                
-                case T_INT16:
-                    bitArray |= 2 << shifts;
-                    break;
-
-                case T_FLOAT:
-                    bitArray |= 3 << shifts;
-                    break;
-                
-                default:
-                    break;
-            }
-
-        }
-        //set from the end
-        dt[5-bIndex]=bitArray;
+        dt[dataTypesLen-bIndex-1]=bitArray;
         
     }
     
